@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import MainContainer from './MainContainer'
-import CartContainer from './CartContainer'
-class Main extends Component{    
+import MainContainer from '../features/MainContainer'
+import CartContainer from '../features/CartContainer'
+class Body extends Component{    
     state = {
         category: [],
         product:[]
@@ -42,4 +42,4 @@ class Main extends Component{
       );        
     }
   }
-export default Main;
+export default Body;

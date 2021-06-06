@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import logo from "../img/logo.png";
-import Button from "./button"
-import Image from "./image"
-import InputSearch from "./input"
+import logo from "../../img/logo.png";
+import Button from "../common/Button"
+import Image from "../common/Image"
+import InputSearch from "../common/Input"
 class Header extends Component {
     render() {
       return (

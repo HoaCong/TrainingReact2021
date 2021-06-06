@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import logo_footer from '../img/logo_footer.png'
-import appstore from '../img/appstore.png'
-import google_play from '../img/google-play-badge.png'
-import gov from '../img/gov.png'
+import logo_footer from '../../img/logo_footer.png'
+import appstore from '../../img/appstore.png'
+import google_play from '../../img/google-play-badge.png'
+import gov from '../../img/gov.png'
 class Footer extends Component {
     render() {
       return (

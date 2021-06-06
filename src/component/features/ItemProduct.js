@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import Price from "./price"
-import Image from "./image"
+import Price from "../common/Price"
+import Image from "../common/Image"
 class ItemProduct extends Component { 
     render() {
         const product =this.props.ProductList;

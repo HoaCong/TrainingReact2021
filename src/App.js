@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
-import Header from './component/header'
-import Main from './component/main'
-import Footer from './component/footer'
+import Header from './component/layout/Header'
+import Body from './component/layout/Body'
+import Footer from './component/layout/Footer'
 class App extends Component {
   render() {
     return (
       <React.StrictMode>
           <Header/>
-          <Main/>
+          <Body/>
           <Footer/>
       </React.StrictMode>
     )

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import ItemCategory from './category'
+import ItemCategory from './ItemCategory'
 class ListCategory extends Component {
   render() {
       return (
