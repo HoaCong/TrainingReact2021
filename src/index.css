@@ -2,8 +2,8 @@
   box-sizing: border-box;
 }
 /* html {
-  scroll-behavior: smooth;
-} */
+    scroll-behavior: smooth;
+  } */
 button,
 input {
   outline: none;
@@ -92,32 +92,31 @@ header button.login {
 /* main content */
 .main {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   width: 1380px;
   margin: auto;
   margin-top: 90px;
   margin-bottom: 40px;
 }
-.main .main_content {
-  width: 67%;
+.categories {
+  width: 22%;
 }
-.main .main_content .categories {
+.categories ul {
   position: fixed;
   width: 296px;
   background: #fff;
   z-index: 0;
 }
-.main .main_content .products {
-  width: 614px;
-  margin-left: auto;
+.products {
+  width: 45%;
+  margin: 0 16px;
   z-index: 0;
 }
-.main .main_cart {
+.cart {
   width: 33%;
-  padding-left: 15px;
   z-index: 0;
 }
-.main .main_cart .cart {
+.main_cart {
   position: fixed;
   background-color: #fff;
   width: 445px;
@@ -125,6 +124,7 @@ header button.login {
 /* Category */
 .main .categories ul {
   padding: 10px 20px;
+  margin: 0;
 }
 li {
   list-style: none;
