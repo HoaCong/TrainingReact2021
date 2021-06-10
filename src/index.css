@@ -1,9 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
 * {
   box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  scroll-margin-top: 76px;
 }
-/* html {
-    scroll-behavior: smooth;
-  } */
+html {
+  scroll-behavior: smooth;
+}
+
 button,
 input {
   outline: none;
@@ -21,9 +26,10 @@ a {
 .no-margin {
   margin: 0;
 }
-.strong {
+.strong,
+.strong u {
   font-weight: 600;
-  font-size: 22px;
+  font-size: 21px;
 }
 /* header */
 body {
@@ -37,7 +43,7 @@ header {
   justify-content: space-between;
   padding: 10px;
   background: #fff;
-  position: fixed;
+  position: sticky;
   width: 100%;
   top: 0;
   z-index: 1;
@@ -50,18 +56,18 @@ header button {
   background: #fff;
   border: 1px solid #cfcdcd;
   text-transform: uppercase;
-  font-size: 12px;
-  padding: 0 24px;
+  font-size: 12.25px;
+  padding: 0 32px;
 }
 
-header div {
+header div.nav_header {
   display: flex;
 }
-header div button {
+header div.nav_header button {
   margin-right: 30px;
 }
 
-header div form {
+header div.nav_header .order_input {
   width: 450px;
 }
 
@@ -69,16 +75,17 @@ header div form {
   position: relative;
 }
 
-.order_input i {
+.order_input > i {
   position: absolute;
   top: 30%;
   left: 12px;
 }
 
 .order_input input {
-  padding: 12px 12px 12px 36px;
+  padding: 10px 12px 10px 36px;
   width: inherit;
-  border: 1px solid black;
+  border: 1px solid #7f7f7f;
+  font-size: 12.25px;
 }
 
 .order_input input:focus {
@@ -95,8 +102,10 @@ header button.login {
   justify-content: space-between;
   width: 1380px;
   margin: auto;
-  margin-top: 90px;
+  margin-top: 37px;
   margin-bottom: 40px;
+  height: max-content;
+  min-height: 100vh;
 }
 .categories {
   width: 22%;
@@ -137,7 +146,7 @@ li {
   text-decoration: none;
   padding: 5px 20px;
   color: #999;
-  font-size: 14px;
+  font-size: 12.25px;
   border-bottom: 2px solid white;
   cursor: pointer;
 }
@@ -152,11 +161,25 @@ li {
 }
 /* Products */
 .products form input {
-  font-size: 16px;
   width: 100%;
 }
 .name_category {
   margin-top: 12px;
+}
+.products .box_cat_product ~ .none_data {
+  display: none;
+}
+.none_data {
+  text-align: center;
+  padding: 16px 20%;
+}
+.none_data img {
+  width: 100%;
+}
+.none_data_error {
+  color: #ea8025;
+  font-weight: bold;
+  font-size: 21px;
 }
 .products .box_cat_product .ele_product {
   display: flex;
@@ -172,13 +195,16 @@ li {
 article h4 {
   color: #333333;
 }
+article {
+  margin-left: 12px;
+}
 .products .box_cat_product .ele_product article h4,
 .products .box_cat_product .ele_product article p {
   margin: 0;
-  padding-left: 10px;
 }
 .products .box_cat_product .ele_product article p.description {
   color: #999;
+  font-size: 12.25px;
 }
 .products .box_cat_product .ele_product article i {
   position: absolute;
@@ -212,7 +238,6 @@ article h4 {
 }
 .ele_order form input {
   width: 100%;
-  font-size: 16px;
 }
 .ele_order button {
   background: #ea8025;

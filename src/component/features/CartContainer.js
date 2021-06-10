@@ -28,11 +28,12 @@ class CartContainer extends Component{
                             </div>
                         </div>
                         <div className="ele_order">
+                            <form action="" className="order_input">
                             <InputSearch 
-                                className="order_input"
                                 classInput="no-padding-l"
                                 type="text"
                                 placeholder="Nhập mã ưu đãi tại đây" />
+                            </form>
                             <Button Text="Áp dụng" />
                         </div>
                     </div>
@@ -41,7 +42,7 @@ class CartContainer extends Component{
                             Tổng cộng
                         </div>
                         <div>
-                        <Price className="no-margin strong" price="10000" unit="đ"/>
+                        <Price className="no-margin strong" price="10.000" unit="đ"/>
                         </div>
                     </div>
                </div>
