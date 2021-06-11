@@ -69,13 +69,27 @@
   padding: 0;
   line-height: 50px;
   box-shadow: 0px 0px 4px 1px #b4b4b4;
-  /* display: none; */
-  /* 
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out; */
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
 }
+.order_input input:focus ~ .result_order_input {
+  visibility: visible;
+  /* animation: fadeIn 0.5s ease-in-out forwards; */
+  opacity: 1;
+}
+/* @keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+} */
 .result_error {
   text-transform: uppercase;
+}
+.result_error div {
   padding: 0 8px;
 }
 ul.result_order_input li {

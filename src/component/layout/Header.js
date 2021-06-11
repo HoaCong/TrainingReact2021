@@ -19,6 +19,7 @@ class ItemAddress extends Component {
 class ListAddress extends Component {
   getValue(e) {
     this.props.callback(e);
+    // this.props.Hoa();
   }
 
   render() {
@@ -27,12 +28,12 @@ class ListAddress extends Component {
     if (Address.status === "INVALID_REQUEST")
       return (
         <div className="result_order_input result_error">
-          Chuỗi không hợp lệ
+          <div>Chuỗi không hợp lệ</div>
         </div>
       );
     if (Address.status === "OK")
       return (
-        <ul className="result_order_input">
+        <ul className={"result_order_input " + this.props.className}>
           {Address.predictions.map((item) => (
             <ItemAddress
               onClick={() => this.getValue(item.description)}
@@ -54,15 +55,15 @@ class Header extends Component {
     this.state = {
       getAddress: [],
       address: "",
-      toogle: false,
+      // toogle: false,
     };
   }
-  toogleOpen = () => {
-    this.setState({ toogle: true });
-  };
-  toogleClose = () => {
-    this.setState({ toogle: false });
-  };
+  // toogleOpen = () => {
+  //   this.setState({ toogle: true });
+  // };
+  // toogleClose = () => {
+  //   this.setState({ toogle: false });
+  // };
   handleValue = (e) => {
     this.setState({ address: e.target.value.toLowerCase() });
   };
@@ -85,7 +86,7 @@ class Header extends Component {
   }
   render() {
     const { getAddress } = this.state;
-    console.log(this.state.toogle);
+    // console.log(this.state.toogle);
     return (
       <header>
         <Image Src={logo} Alt="Logo Cửa Hàng" Size="logo" />
@@ -95,14 +96,15 @@ class Header extends Component {
             <form
               action="#"
               className="order_input"
+              // className={"order_input " + (this.state.toogle ? "demoin" : null)}
               onChange={(e) => {
                 this.submitForm(e);
               }}
               onSubmit={(e) => {
                 this.submitForm(e);
               }}
-              onClick={() => this.toogleOpen()}
-              onBlur={() => this.toogleClose()}
+              // onBlur={() => this.toogleClose()}
+              // onClick={() => this.toogleOpen()}
             >
               <i className="fas fa-map-marker-alt"></i>
               <InputSearch
@@ -111,9 +113,11 @@ class Header extends Component {
                 placeholder="Nhập địa chỉ giao hàng"
                 onChange={(e) => this.handleValue(e)}
               />
-              {this.state.toogle ? (
-                <ListAddress callback={this.callback} Data={getAddress} />
-              ) : null}
+              <ListAddress
+                callback={this.callback}
+                Data={getAddress}
+                // Hoa={() => this.toogleClose()}
+              />
             </form>
           </div>
         </div>
