@@ -121,3 +121,7 @@ ul.result_order_input li p {
 .address {
   text-transform: uppercase;
 }
+
+.active-2 {
+  background: blue;
+}

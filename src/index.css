@@ -8,7 +8,6 @@
 html {
   scroll-behavior: smooth;
 }
-
 button,
 input {
   outline: none;
@@ -150,8 +149,8 @@ li {
   border-bottom: 2px solid white;
   cursor: pointer;
 }
-.categories ul li .active,
-.categories ul li .active:hover {
+.categories ul li .active-cat,
+.categories ul li .active-cat:hover {
   color: coral;
   border-bottom: 2px solid #ea8025;
   box-sizing: border-box;

@@ -12,11 +12,7 @@ class ListProduct extends Component {
       return null;
     }
     return (
-      <div
-        className="box_cat_product"
-        key={list.id}
-        id={"cate" + this.props.catID}
-      >
+      <div className="box_cat_product" key={list.id} id={this.props.catID}>
         <div key={list.id} className="name_category">
           {this.props.category}
         </div>

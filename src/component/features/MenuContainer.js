@@ -8,6 +8,7 @@ class MenuContainer extends Component {
     super(props);
     this.state = {
       keyword: "",
+      classdemo: "idcate1",
     };
   }
   callbackGetKey = (data) => {
@@ -16,6 +17,33 @@ class MenuContainer extends Component {
     });
   };
 
+  activeSr = (data) => {
+    this.props.changeActive(data);
+    let a = document.querySelectorAll(".active-cat");
+    if (a.length > 0) {
+      document.querySelector(".active-cat").classList.remove("active-cat");
+    }
+    document.getElementById("cate" + data).classList.add("active-cat");
+  };
+  demoSr = () => {
+    let testDiv = document.querySelectorAll(".box_cat_product");
+    let a = window.scrollY + 76; // "+76" vì set height khi chia layout
+    testDiv.forEach((e) =>
+      document.getElementById(e.id).offsetTop <= a &&
+      a <=
+        document.getElementById(e.id).offsetTop +
+          document.getElementById(e.id).offsetHeight
+        ? this.activeSr(e.id)
+        : null
+    );
+  };
+  componentDidMount() {
+    window.addEventListener("scroll", this.demoSr);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.demoSr);
+  }
   render() {
     const Data = this.props.ConcatList;
     return (
@@ -29,9 +57,6 @@ class MenuContainer extends Component {
               KeyWord={this.state.keyword}
               category={item.name}
               catID={item.id}
-              demo={this.demo}
-              changeActive={this.props.changeActive}
-              active={this.props.active}
             />
           ) : null
         )}
