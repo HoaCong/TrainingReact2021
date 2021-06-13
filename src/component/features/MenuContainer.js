@@ -19,18 +19,17 @@ class MenuContainer extends Component {
 
   activeSr = (data) => {
     this.props.changeActive(data);
-    let a = document.querySelectorAll(".active-cat");
-    if (a.length > 0) {
+    if (document.querySelectorAll(".active-cat").length > 0) {
       document.querySelector(".active-cat").classList.remove("active-cat");
     }
     document.getElementById("cate" + data).classList.add("active-cat");
   };
-  demoSr = () => {
-    let testDiv = document.querySelectorAll(".box_cat_product");
-    let a = window.scrollY + 76; // "+76" vì set height khi chia layout
-    testDiv.forEach((e) =>
-      document.getElementById(e.id).offsetTop <= a &&
-      a <=
+  windowScroll = () => {
+    let NodeList = document.querySelectorAll(".box_cat_product");
+    let yWindow = window.scrollY + 76; // "+76" vì set height khi chia layout
+    NodeList.forEach((e) =>
+      document.getElementById(e.id).offsetTop <= yWindow &&
+      yWindow <=
         document.getElementById(e.id).offsetTop +
           document.getElementById(e.id).offsetHeight
         ? this.activeSr(e.id)
@@ -38,11 +37,11 @@ class MenuContainer extends Component {
     );
   };
   componentDidMount() {
-    window.addEventListener("scroll", this.demoSr);
+    window.addEventListener("scroll", this.windowScroll);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.demoSr);
+    window.removeEventListener("scroll", this.windowScroll);
   }
   render() {
     const Data = this.props.ConcatList;

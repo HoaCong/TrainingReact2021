@@ -6,7 +6,6 @@ class ItemCategory extends Component {
   };
 
   render() {
-    // console.log("item: " + this.props.active);
     return this.props.CatList.map((item) =>
       item.ListProduct.length > 0 ? (
         // <li key={item._id}>
@@ -26,11 +25,12 @@ class ItemCategory extends Component {
             href={"#" + item.id}
             id={"cate" + item.id}
             onClick={() => this.getValue(item.id)}
-            className={this.props.active === item.id ? "active-cat" : null}
+            className={
+              item.id === this.props.CatList[0].id ? "active-cat" : null
+            }
           >
             {item.name}
           </a>
-          {/* {console.log("itemid: " + item.id)} */}
         </li>
       ) : null
     );

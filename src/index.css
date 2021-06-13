@@ -104,7 +104,7 @@ header button.login {
   margin-top: 37px;
   margin-bottom: 40px;
   height: max-content;
-  min-height: 100vh;
+  min-height: 86vh;
 }
 .categories {
   width: 22%;
@@ -275,6 +275,7 @@ footer .box_footer div.ele_footer .social i {
 footer .box_footer div.ele_footer h3 {
   margin-top: 0;
   color: #ea8025;
+  font-size: 16px;
 }
 footer .box_footer div.ele_footer .about {
   display: flex;
