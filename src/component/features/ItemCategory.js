@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 // import {Link} from "react-scroll";
 class ItemCategory extends Component {
-  getValue = (data) => {
-    this.props.changeActive(data);
-  };
-
   render() {
     return this.props.CatList.map((item) =>
       item.ListProduct.length > 0 ? (
@@ -24,10 +20,7 @@ class ItemCategory extends Component {
           <a
             href={"#" + item.id}
             id={"cate" + item.id}
-            onClick={() => this.getValue(item.id)}
-            className={
-              item.id === this.props.CatList[0].id ? "active-cat" : null
-            }
+            className={item.id === this.props.active ? "active-cat" : null}
           >
             {item.name}
           </a>

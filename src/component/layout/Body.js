@@ -10,7 +10,7 @@ class Body extends Component {
     this.state = {
       isLoaded: false,
       allData: [],
-      active: 1,
+      active: null,
     };
   }
 
@@ -43,7 +43,11 @@ class Body extends Component {
           .then((response) => response.json())
           .then((menus) => {
             const newData = this.mergeData(categories, menus.data);
-            this.setState({ allData: newData, isLoaded: true });
+            this.setState({
+              allData: newData,
+              isLoaded: true,
+              active: newData[0].id,
+            });
           });
       });
   }
@@ -66,7 +70,6 @@ class Body extends Component {
           <ListCategory
             classList="categories"
             ConcatList={allData}
-            changeActive={this.changeActive}
             active={this.state.active}
           />
           <MenuContainer

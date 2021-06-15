@@ -19,9 +19,10 @@ class ItemAddress extends Component {
 class ListAddress extends Component {
   getValue(e) {
     this.props.callback(e);
-    // this.props.Hoa();
   }
-
+  getDemo(e) {
+    this.props.callback(e);
+  }
   render() {
     const Address = this.props.Data;
 
@@ -46,7 +47,14 @@ class ListAddress extends Component {
           ))}
         </ul>
       );
-    return <div></div>;
+    return (
+      <div className="result_order_input result_error">
+        <div onClick={() => this.getDemo("Thừa Thiên Huế")}>Thừa Thiên Huế</div>
+        <div onClick={() => this.getDemo("Đà Nẵng")}>Đà Nẵng</div>
+        <div onClick={() => this.getDemo("Hồ Chí Minh")}>Hồ Chí Minh</div>
+        <div onClick={() => this.getDemo("Hà Nội")}>Hà Nội</div>
+      </div>
+    );
   }
 }
 class Header extends Component {
@@ -55,29 +63,33 @@ class Header extends Component {
     this.state = {
       getAddress: [],
       address: "",
-      // toogle: false,
+      toogle: false,
     };
   }
-  // toogleOpen = () => {
-  //   this.setState({ toogle: true });
-  // };
-  // toogleClose = () => {
-  //   this.setState({ toogle: false });
-  // };
-  handleValue = (e) => {
-    this.setState({ address: e.target.value.toLowerCase() });
+  openAddress = () => {
+    this.setState({
+      toogle: true,
+    });
   };
-
+  closeAddress = () => {
+    this.setState({
+      toogle: false,
+    });
+  };
   callback = (data) => {
     this.setState({
       address: data,
     });
   };
-
-  submitForm(e) {
+  noneSubmit(e) {
     e.preventDefault();
+  }
+  changeInput(e) {
+    // e.preventDefault();
+    this.setState({ address: e.target.value.toLowerCase() });
     fetch(
       `https://order.thecoffeehouse.com/api/location?address=${this.state.address}`
+      // `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${e.target.value.toLowerCase()}&from=TCH-WEB`
     )
       .then((response) => response.json())
       .then((ListAddress) => {
@@ -86,7 +98,7 @@ class Header extends Component {
   }
   render() {
     const { getAddress } = this.state;
-    // console.log(this.state.toogle);
+    console.log(this.state.toogle);
     return (
       <header>
         <Image Src={logo} Alt="Logo Cửa Hàng" Size="logo" />
@@ -96,29 +108,23 @@ class Header extends Component {
             <form
               action="#"
               className="order_input"
-              // className={"order_input " + (this.state.toogle ? "demoin" : null)}
-              onChange={(e) => {
-                this.submitForm(e);
-              }}
               onSubmit={(e) => {
-                this.submitForm(e);
+                this.noneSubmit(e);
               }}
-              // onBlur={() => this.toogleClose()}
-              // onClick={() => this.toogleOpen()}
+              onClick={() => setTimeout(this.openAddress, 200)}
+              onBlur={() => setTimeout(this.closeAddress, 200)}
             >
               <i className="fas fa-map-marker-alt"></i>
               <InputSearch
                 type="text"
                 value={this.state.address}
                 placeholder="Nhập địa chỉ giao hàng"
-                onChange={(e) => this.handleValue(e)}
-              />
-              <ListAddress
-                callback={this.callback}
-                Data={getAddress}
-                // Hoa={() => this.toogleClose()}
+                onChange={(e) => this.changeInput(e)}
               />
             </form>
+            {this.state.toogle ? (
+              <ListAddress callback={this.callback} Data={getAddress} />
+            ) : null}
           </div>
         </div>
         <Button className="login" Text="Đăng nhập" />
