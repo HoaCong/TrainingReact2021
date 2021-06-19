@@ -6,7 +6,7 @@ class MenuContainer extends Component {
     super(props);
     this.state = {
       keyword: "",
-      classdemo: "idcate1",
+      // classdemo: "idcate1",
     };
   }
   callbackGetKey = (data) => {
@@ -47,7 +47,11 @@ class MenuContainer extends Component {
     return (
       <section className={this.props.classMenu}>
         <SearchForm callback={this.callbackGetKey} />
-        <ListProduct ProductList={Data} KeyWord={this.state.keyword} />
+        <ListProduct
+          ProductList={Data}
+          KeyWord={this.state.keyword}
+          toogleOrder={this.props.toogleOrder}
+        />
       </section>
     );
   }

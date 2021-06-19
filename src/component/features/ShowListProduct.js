@@ -16,7 +16,11 @@ class ShowListProduct extends Component {
         <div key={list.id} className="name_category">
           {this.props.category}
         </div>
-        <ItemProduct key={list.id} ProductList={list} />
+        <ItemProduct
+          key={list.id}
+          ProductList={list}
+          toogleOrder={this.props.toogleOrder}
+        />
       </div>
     );
   }

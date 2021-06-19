@@ -36,6 +36,7 @@ class ListProduct extends Component {
             KeyWord={keyword}
             category={item.name}
             catID={item.id}
+            toogleOrder={this.props.toogleOrder}
           />
         ) : null
       );

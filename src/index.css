@@ -62,8 +62,8 @@ header button {
 header div.nav_header {
   display: flex;
 }
-header div.nav_header button {
-  margin-right: 30px;
+header div.nav_header .address_search {
+  margin-left: 30px;
 }
 
 header div.nav_header .order_input {

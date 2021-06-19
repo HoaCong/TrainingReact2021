@@ -7,9 +7,8 @@ class SearchForm extends Component {
   render() {
     return (
       <form action="" className="order_input">
-        <i className="fas fa-map-marker-alt"></i>
+        <i className="fas fa-search"></i>
         <InputSearch
-          classIcon="fas fa-search"
           type="text"
           placeholder="Tìm kiếm sản phẩm"
           onChange={(e) => this.handleValue(e)}

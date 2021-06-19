@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import Price from "../common/Price";
 import Image from "../common/Image";
 class ItemProduct extends Component {
+  setItemOrder = (data) => {
+    this.props.toogleOrder(data);
+  };
   render() {
     const product = this.props.ProductList;
     return product.map((item) => (
@@ -11,7 +14,10 @@ class ItemProduct extends Component {
           <h4>{item.product_name}</h4>
           <p className="description">{item.description}</p>
           <Price price={item.price} unit="đ" />
-          <i className="fas fa-plus-circle"></i>
+          <i
+            className="fas fa-plus-circle"
+            onClick={() => this.setItemOrder(item)}
+          ></i>
         </article>
       </div>
     ));

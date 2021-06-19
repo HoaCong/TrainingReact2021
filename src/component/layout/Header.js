@@ -3,6 +3,7 @@ import logo from "../../img/logo.png";
 import Button from "../common/Button";
 import Image from "../common/Image";
 import InputSearch from "../common/Input";
+import OrderTimer from "../features/OrderTimer";
 class ItemAddress extends Component {
   render() {
     return (
@@ -63,18 +64,49 @@ class Header extends Component {
     this.state = {
       getAddress: [],
       address: "",
-      toogle: false,
+      toogleAddress: false,
+      toogleTimer: false,
+      listDate: [],
+      textTimer: "GIAO NGAY",
+      today: null,
     };
+    this.insideTimer = React.createRef();
   }
+  changeTextTimer = (data) => {
+    this.setState({
+      textTimer: data,
+    });
+  };
   openAddress = () => {
     this.setState({
-      toogle: true,
+      toogleAddress: true,
     });
   };
   closeAddress = () => {
     this.setState({
-      toogle: false,
+      toogleAddress: false,
     });
+  };
+  getThreeDate = () => {
+    let day = new Date();
+    let nextDay = new Date();
+    let tmpList = [];
+    let i = 0;
+    if (day.getHours() >= 20 && day.getMinutes() >= 15) i = 1;
+    for (i; i < 3; i++) {
+      nextDay.setDate(day.getDate() + i);
+      tmpList.push(nextDay.toLocaleDateString());
+    }
+    this.setState({
+      listDate: tmpList,
+      today: day.toLocaleDateString(),
+    });
+  };
+  toogleTimer = () => {
+    this.setState({
+      toogleTimer: !this.state.toogleTimer,
+    });
+    this.getThreeDate();
   };
   callback = (data) => {
     this.setState({
@@ -96,14 +128,41 @@ class Header extends Component {
         this.setState({ getAddress: ListAddress });
       });
   }
+  checkInside = (e) => {
+    if (
+      this.insideTimer.current &&
+      !this.insideTimer.current.contains(e.target)
+    ) {
+      this.setState({
+        toogleTimer: false,
+      });
+    }
+  };
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.checkInside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.checkInside);
+  }
   render() {
     const { getAddress } = this.state;
-    console.log(this.state.toogle);
+
     return (
       <header>
         <Image Src={logo} Alt="Logo Cửa Hàng" Size="logo" />
         <div className="nav_header">
-          <Button Text="Giao ngay" />
+          <div className="toogle_timer" ref={this.insideTimer}>
+            <Button Text={this.state.textTimer} onClick={this.toogleTimer} />
+            {this.state.toogleTimer ? (
+              <OrderTimer
+                listDate={this.state.listDate}
+                today={this.state.today}
+                changeTextTimer={this.changeTextTimer}
+              />
+            ) : null}
+          </div>
           <div className="address_search">
             <form
               action="#"
@@ -122,7 +181,7 @@ class Header extends Component {
                 onChange={(e) => this.changeInput(e)}
               />
             </form>
-            {this.state.toogle ? (
+            {this.state.toogleAddress ? (
               <ListAddress callback={this.callback} Data={getAddress} />
             ) : null}
           </div>
