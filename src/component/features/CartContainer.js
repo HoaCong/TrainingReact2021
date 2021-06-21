@@ -4,6 +4,14 @@ import InputSearch from "../common/Input";
 import Price from "../common/Price";
 class CartContainer extends Component {
   render() {
+    let totalAmount = 0,
+      totalPrice = 0,
+      feeShip = 0;
+    if (this.props.listOrder != null)
+      this.props.listOrder.map(
+        (item) => (totalAmount += item.amount) && (totalPrice += item.price)
+      );
+    console.log(this.props.listOrder);
     return (
       <section className={this.props.classCart}>
         <div className="main_cart">
@@ -11,16 +19,52 @@ class CartContainer extends Component {
             <Button className="seecart" Text="Xem giỏ hàng" />
           </div>
           <div className="box_order">
+            {this.props.listOrder != null
+              ? this.props.listOrder.map((item, index) => (
+                  <div
+                    className="ele_order border_bottom"
+                    key={index}
+                    onClick={() => this.props.editItemOrder(item, index)}
+                  >
+                    <div className="ele_order list_order">
+                      <div className="item_amount">{item.amount}</div>
+                      <div className="">
+                        <h4 className="item_name">{item.product_name}</h4>
+                        <p className="list_option">
+                          {item.size}
+                          {item.topping !== null
+                            ? " + " + item.topping.slice(0, -2)
+                            : null}
+                        </p>
+                        <p className="list_option">{item.description}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <Price
+                        className="no-margin"
+                        price={item.price}
+                        unit="đ"
+                      />
+                    </div>
+                  </div>
+                ))
+              : null}
             <div className="ele_order">
-              <div>Cộng (0 món)</div>
+              <div>Cộng ({totalAmount} món)</div>
               <div>
-                <Price className="no-margin" price="0" unit="đ" />
+                <Price className="no-margin" price={totalPrice} unit="đ" />
               </div>
             </div>
             <div className="ele_order">
               <div>Vận chuyển</div>
               <div>
-                <Price className="no-margin" price="10000" unit="đ" />
+                <Price
+                  className="no-margin"
+                  price={
+                    totalPrice >= 50000 ? (feeShip = 0) : (feeShip = 10000)
+                  }
+                  unit="đ"
+                />
               </div>
             </div>
             <div className="ele_order">
@@ -37,7 +81,11 @@ class CartContainer extends Component {
           <div className="box_order ele_order none_border">
             <div>Tổng cộng</div>
             <div>
-              <Price className="no-margin strong" price="10.000" unit="đ" />
+              <Price
+                className="no-margin strong"
+                price={totalPrice + feeShip}
+                unit="đ"
+              />
             </div>
           </div>
         </div>

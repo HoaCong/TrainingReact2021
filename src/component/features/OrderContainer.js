@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Button from "../common/Button";
 import InputSearch from "../common/Input";
 import Price from "../common/Price";
+import InputCheckbox from "../common/InputCheckbox";
 class OrderContainer extends Component {
   constructor(props) {
     super(props);
@@ -9,6 +10,18 @@ class OrderContainer extends Component {
       listTopping: "",
     };
   }
+  addOrder = () => {
+    this.props.addListOrder(
+      this.props.itemOrder.product_name,
+      this.props.size,
+      this.props.topping,
+      this.props.description,
+      this.props.amount,
+      this.props.price * this.props.amount
+    );
+    this.setItemOrder(0);
+  };
+
   setItemOrder = (data) => {
     this.props.toogleOrder(data);
   };
@@ -44,6 +57,9 @@ class OrderContainer extends Component {
       this.props.changePrice(this.props.price - data.price);
     }
   };
+  getDesc = (e) => {
+    this.props.changeDesc(e.target.value);
+  };
   noneSubmit = (e) => {
     e.preventDefault();
   };
@@ -58,7 +74,12 @@ class OrderContainer extends Component {
   }
   render() {
     const itemOrder = this.props.itemOrder;
-    console.log(this.props.itemOrder);
+    console.log("gia" + this.props.price);
+    console.log("mo ta" + this.props.description);
+    console.log("topping" + this.props.topping);
+    console.log("size" + this.props.size);
+    console.log("amount" + this.props.amount);
+    console.log("index" + this.props.index);
     return (
       <div className="order_container">
         <div
@@ -90,37 +111,17 @@ class OrderContainer extends Component {
                 <p>Size -</p>
                 <div className="radio_order">
                   {itemOrder.variants.map((item, index) => (
-                    <div
-                      className="ele_radio"
-                      style={{ order: item.price }}
+                    <InputCheckbox
                       key={index}
-                    >
-                      <input
-                        type="radio"
-                        id={item.code}
-                        name="size"
-                        value={item.val}
-                        onClick={() => this.setSize(item.val, item.price)}
-                      />
-
-                      {item.price - itemOrder.price > 0 ? (
-                        <label className="desc_size" htmlFor={item.code}>
-                          {item.val}&nbsp;(+
-                          {
-                            <Price
-                              className="no-margin"
-                              price={item.price - itemOrder.price}
-                              unit="đ"
-                            />
-                          }
-                          )
-                        </label>
-                      ) : (
-                        <label className="desc_size" htmlFor={item.code}>
-                          {item.val}
-                        </label>
-                      )}
-                    </div>
+                      style={{ order: item.price }}
+                      type="radio"
+                      id={item.code}
+                      name="size"
+                      value={item.val}
+                      onClick={() => this.setSize(item.val, item.price)}
+                      nameOption={item.val}
+                      price={item.price - itemOrder.price}
+                    />
                   ))}
                 </div>
                 <hr />
@@ -131,18 +132,16 @@ class OrderContainer extends Component {
                 <p>Topping -</p>
                 <div className="radio_order">
                   {itemOrder.topping_list.map((item, index) => (
-                    <div className="ele_radio" key={index}>
-                      <input
-                        type="checkbox"
-                        id={item.code}
-                        name="topping"
-                        value={item.code}
-                        onClick={() => this.setTopping(item)}
-                      />
-                      <label htmlFor={item.code}>
-                        {item.product_name} (+{item.price})
-                      </label>
-                    </div>
+                    <InputCheckbox
+                      key={index}
+                      type="checkbox"
+                      id={item.code}
+                      name="topping"
+                      value={item.code}
+                      onClick={() => this.setTopping(item)}
+                      nameOption={item.product_name}
+                      price={item.price}
+                    />
                   ))}
                 </div>
                 <hr />
@@ -156,7 +155,12 @@ class OrderContainer extends Component {
               }}
             >
               <i className="fas fa-pencil-alt"></i>
-              <InputSearch type="text" placeholder="Thêm ghi chú món này" />
+              <InputSearch
+                type="text"
+                placeholder="Thêm ghi chú món này"
+                name="description"
+                onChange={(e) => this.getDesc(e)}
+              />
             </form>
           </div>
           <hr />
@@ -174,6 +178,7 @@ class OrderContainer extends Component {
             </div>
             <Button
               className="seecart"
+              onClick={() => this.addOrder()}
               Text={
                 <div className="btn_add_cart">
                   <div className="add_cart">Thêm vào giỏ</div>

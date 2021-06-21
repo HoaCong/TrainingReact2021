@@ -212,7 +212,7 @@ article {
 /* Cart */
 .cart .box_order {
   padding: 13px 20px;
-  border-bottom: 2px solid #cfcdcd;
+  border-bottom: 1px solid #cfcdcd;
 }
 .seecart {
   font-size: 14px;
@@ -227,7 +227,7 @@ article {
 .ele_order {
   display: flex;
   justify-content: space-between;
-  line-height: 40px;
+  line-height: 32px;
 }
 .ele_order form {
   width: 70%;

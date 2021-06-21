@@ -45,6 +45,8 @@
 }
 .radio_order .ele_radio {
   margin-right: 24px;
+  display: flex;
+  align-content: center;
 }
 .order_desc {
   width: 100%;
@@ -69,10 +71,34 @@
 .add_cart {
   margin-right: 40px;
 }
+.border_bottom {
+  border-bottom: 1px solid #cfcdcd;
+}
+.list_order {
+  line-height: 20px;
+  padding: 12px 0;
+}
+.item_amount {
+  background: #faa05a;
+  height: max-content;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12.25px;
+  padding: 0 10px;
+  margin: 4px 16px 0 0;
+  border-radius: 2px;
+}
+.item_name,
+.list_option {
+  margin: 0;
+}
+.list_option {
+  font-size: 12.25px;
+}
 
 /* Head Order */
-.head_order article .name_product,
-.head_order article .current_option {
+.name_product,
+.current_option {
   margin: 0 0 7px 0;
 }
 
@@ -85,10 +111,6 @@
 }
 .amount {
   padding: 0 16px;
-}
-
-.desc_size {
-  display: inline-flex;
 }
 
 /* ORDER TIME */

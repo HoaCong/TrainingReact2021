@@ -6,7 +6,6 @@ class MenuContainer extends Component {
     super(props);
     this.state = {
       keyword: "",
-      // classdemo: "idcate1",
     };
   }
   callbackGetKey = (data) => {

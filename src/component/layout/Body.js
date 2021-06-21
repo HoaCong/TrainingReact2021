@@ -17,12 +17,43 @@ class Body extends Component {
       // Order
       order: false,
       itemOrder: [],
-      amount: 1,
       size: null,
       topping: null,
+      desc: null,
+      amount: 1,
       price: null,
+      listOrder: [],
     };
   }
+  addListOrder = (product_name, size, topping, description, amount, price) => {
+    let obj = {
+      product_name: product_name,
+      itemOrder: this.state.itemOrder,
+      size: size,
+      topping: topping,
+      description: description,
+      amount: amount,
+      price: price,
+    };
+    if (this.state.listOrder.length === 0) {
+      this.setState({
+        listOrder: [...this.state.listOrder, obj],
+      });
+    } else {
+      let a = 1;
+      this.state.listOrder.map((item) =>
+        item.product_name === product_name &&
+        item.size === size &&
+        item.topping === topping
+          ? ((item.amount += amount), (item.price += price), (a *= -1))
+          : (a *= 1)
+      );
+      if (a === 1)
+        this.setState({
+          listOrder: [...this.state.listOrder, obj],
+        });
+    }
+  };
   toogleOrder = (data) => {
     this.setState({
       order: !this.state.order,
@@ -30,6 +61,17 @@ class Body extends Component {
       price: data.price,
       topping: null,
       amount: 1,
+    });
+  };
+  editItemOrder = (data, index) => {
+    this.setState({
+      order: !this.state.order,
+      itemOrder: data.itemOrder,
+      price: data.price / data.amount,
+      description: data.description,
+      topping: data.topping,
+      size: data.size,
+      amount: data.amount,
     });
   };
   changeActive = (id) => {
@@ -45,6 +87,11 @@ class Body extends Component {
   changeTopping = (data) => {
     this.setState({
       topping: data,
+    });
+  };
+  changeDesc = (data) => {
+    this.setState({
+      description: data,
     });
   };
   changePrice = (data) => {
@@ -123,7 +170,6 @@ class Body extends Component {
             active={this.state.active}
             toogleOrder={this.toogleOrder}
           />
-          <CartContainer classCart="cart" />
           {this.state.order ? (
             <OrderContainer
               toogleOrder={this.toogleOrder}
@@ -132,12 +178,20 @@ class Body extends Component {
               changeSize={this.changeSize}
               topping={this.state.topping}
               changeTopping={this.changeTopping}
+              description={this.state.description}
+              changeDesc={this.changeDesc}
               price={this.state.price}
               changePrice={this.changePrice}
               amount={this.state.amount}
               changeAmount={this.changeAmount}
+              addListOrder={this.addListOrder}
             />
           ) : null}
+          <CartContainer
+            classCart="cart"
+            listOrder={this.state.listOrder}
+            editItemOrder={this.editItemOrder}
+          />
         </div>
       );
     }

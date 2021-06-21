@@ -21,41 +21,28 @@ class ListAddress extends Component {
   getValue(e) {
     this.props.callback(e);
   }
-  getDemo(e) {
-    this.props.callback(e);
-  }
   render() {
     const Address = this.props.Data;
-
-    if (Address.status === "INVALID_REQUEST")
+    if (Address.length === 0)
       return (
         <div className="result_order_input result_error">
           <div>Chuỗi không hợp lệ</div>
         </div>
       );
-    if (Address.status === "OK")
+    else
       return (
         <ul className={"result_order_input " + this.props.className}>
-          {Address.predictions.map((item) => (
+          {Address.addresses.map((item) => (
             <ItemAddress
-              onClick={() => this.getValue(item.description)}
-              key={item.description}
-              location={item.description}
+              onClick={() => this.getValue(item.full_address)}
+              key={item.full_address}
               Icon="fas fa-map-marker-alt"
-              p_Address={item.structured_formatting.main_text}
-              p_Region={item.structured_formatting.secondary_text}
+              p_Address={item.title_address}
+              p_Region={item.full_address}
             />
           ))}
         </ul>
       );
-    return (
-      <div className="result_order_input result_error">
-        <div onClick={() => this.getDemo("Thừa Thiên Huế")}>Thừa Thiên Huế</div>
-        <div onClick={() => this.getDemo("Đà Nẵng")}>Đà Nẵng</div>
-        <div onClick={() => this.getDemo("Hồ Chí Minh")}>Hồ Chí Minh</div>
-        <div onClick={() => this.getDemo("Hà Nội")}>Hà Nội</div>
-      </div>
-    );
   }
 }
 class Header extends Component {
@@ -117,16 +104,40 @@ class Header extends Component {
     e.preventDefault();
   }
   changeInput(e) {
-    // e.preventDefault();
-    this.setState({ address: e.target.value.toLowerCase() });
-    fetch(
-      `https://order.thecoffeehouse.com/api/location?address=${this.state.address}`
-      // `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${e.target.value.toLowerCase()}&from=TCH-WEB`
-    )
-      .then((response) => response.json())
-      .then((ListAddress) => {
-        this.setState({ getAddress: ListAddress });
-      });
+    this.setState({ address: e.target.value });
+    if (e.target.value.length > 5) {
+      fetch(
+        `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${e.target.value.toLowerCase()}&from=TCH-WEB`,
+        {
+          headers: {
+            accept: "application/json, text/plain, */*",
+            "accept-language": "en-US,en;q=0.9,ja;q=0.8",
+            "cache-control": "no-cache",
+            pragma: "no-cache",
+            "sec-ch-ua":
+              '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "tch-app-version": "",
+            "tch-device-id": "",
+            "x-csrf-token": "XJVEF4AnLtZqcFJ87XeJaV1nJxGC5HrAkMy9QCHA",
+            "x-requested-with": "XMLHttpRequest",
+          },
+          referrer: "https://order.thecoffeehouse.com/",
+          referrerPolicy: "strict-origin-when-cross-origin",
+          body: null,
+          method: "GET",
+          mode: "cors",
+          credentials: "omit",
+        }
+      )
+        .then((response) => response.json())
+        .then((ListAddress) => {
+          this.setState({ getAddress: ListAddress });
+        });
+    }
   }
   checkInside = (e) => {
     if (
@@ -182,7 +193,11 @@ class Header extends Component {
               />
             </form>
             {this.state.toogleAddress ? (
-              <ListAddress callback={this.callback} Data={getAddress} />
+              <ListAddress
+                callback={this.callback}
+                Data={getAddress}
+                className=""
+              />
             ) : null}
           </div>
         </div>
