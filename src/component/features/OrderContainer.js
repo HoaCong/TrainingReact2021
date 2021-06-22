@@ -74,12 +74,6 @@ class OrderContainer extends Component {
   }
   render() {
     const itemOrder = this.props.itemOrder;
-    console.log("gia" + this.props.price);
-    console.log("mo ta" + this.props.description);
-    console.log("topping" + this.props.topping);
-    console.log("size" + this.props.size);
-    console.log("amount" + this.props.amount);
-    console.log("index" + this.props.index);
     return (
       <div className="order_container">
         <div

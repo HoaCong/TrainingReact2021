@@ -11,7 +11,6 @@ class CartContainer extends Component {
       this.props.listOrder.map(
         (item) => (totalAmount += item.amount) && (totalPrice += item.price)
       );
-    console.log(this.props.listOrder);
     return (
       <section className={this.props.classCart}>
         <div className="main_cart">
