@@ -5,6 +5,7 @@ class InputCheckbox extends Component {
     return (
       <div className="ele_radio" style={this.props.style}>
         <input
+          defaultChecked={this.props.checked}
           type={this.props.type}
           id={this.props.id}
           name={this.props.name}

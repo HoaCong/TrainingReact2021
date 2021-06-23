@@ -1,17 +1,30 @@
 import React, { Component } from "react";
 import InputSearch from "../common/Input";
 class SearchForm extends Component {
-  handleValue(e) {
-    this.props.callback(e.target.value);
+  noneSubmit(e) {
+    e.preventDefault();
   }
   render() {
     return (
-      <form action="" className="order_input">
-        <i className="fas fa-search"></i>
+      <form
+        action=""
+        className={this.props.className}
+        onSubmit={(e) => {
+          this.noneSubmit(e);
+        }}
+        onClick={this.props.onClick}
+        onBlur={this.props.onBlur}
+        autoComplete="off"
+      >
+        <i className={this.props.icon}></i>
         <InputSearch
-          type="text"
-          placeholder="Tìm kiếm sản phẩm"
-          onChange={(e) => this.handleValue(e)}
+          type={this.props.type}
+          classInput={this.props.classInput}
+          placeholder={this.props.placeholder}
+          value={this.props.value}
+          className={this.props.classInput}
+          name={this.props.name}
+          onChange={this.props.onChange}
         />
       </form>
     );

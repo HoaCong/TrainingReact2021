@@ -92,7 +92,7 @@ header div.nav_header .order_input {
 }
 
 header button.login {
-  margin-right: 70px;
+  margin-right: 50px;
 }
 /* end header */
 /* main content */
@@ -244,6 +244,10 @@ article {
 }
 .none_border {
   border: none !important;
+}
+.list_order {
+  max-height: 600px;
+  overflow: auto;
 }
 /* footer */
 footer {

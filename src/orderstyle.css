@@ -71,12 +71,13 @@
 .add_cart {
   margin-right: 40px;
 }
-.border_bottom {
+.item_order {
+  min-height: 70px;
   border-bottom: 1px solid #cfcdcd;
 }
-.list_order {
+.box_item_order {
   line-height: 20px;
-  padding: 12px 0;
+  padding: 4px 0;
 }
 .item_amount {
   background: #faa05a;
@@ -156,4 +157,9 @@
 }
 select {
   outline: none;
+}
+
+.total_amount {
+  display: inline-block;
+  background-color: red;
 }

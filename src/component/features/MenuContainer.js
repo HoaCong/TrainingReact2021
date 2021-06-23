@@ -8,11 +8,14 @@ class MenuContainer extends Component {
       keyword: "",
     };
   }
-  callbackGetKey = (data) => {
+  getKeyWord = (data) => {
     this.setState({
       keyword: data,
     });
   };
+  handleValue(e) {
+    this.getKeyWord(e.target.value);
+  }
 
   activeElement = (data) => {
     this.props.changeActive(data);
@@ -40,12 +43,18 @@ class MenuContainer extends Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", this.windowScroll);
   }
-
   render() {
     const Data = this.props.ConcatList;
     return (
       <section className={this.props.classMenu}>
-        <SearchForm callback={this.callbackGetKey} />
+        <SearchForm
+          className="order_input"
+          icon="fas fa-search"
+          type="text"
+          placeholder="Tìm kiếm sản phẩm"
+          onChange={(e) => this.handleValue(e)}
+        />
+
         <ListProduct
           ProductList={Data}
           KeyWord={this.state.keyword}

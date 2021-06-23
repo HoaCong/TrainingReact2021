@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import logo from "../../img/logo.png";
 import Button from "../common/Button";
 import Image from "../common/Image";
-import InputSearch from "../common/Input";
+import SearchForm from "../common/SearchForm";
 import OrderTimer from "../features/OrderTimer";
 class ItemAddress extends Component {
   render() {
@@ -23,6 +23,7 @@ class ListAddress extends Component {
   }
   render() {
     const Address = this.props.Data;
+    if (this.props.address.length < 5) return <div></div>;
     if (Address.length === 0)
       return (
         <div className="result_order_input result_error">
@@ -100,44 +101,40 @@ class Header extends Component {
       address: data,
     });
   };
-  noneSubmit(e) {
-    e.preventDefault();
-  }
+
   changeInput(e) {
     this.setState({ address: e.target.value });
-    if (e.target.value.length > 5) {
-      fetch(
-        `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${e.target.value.toLowerCase()}&from=TCH-WEB`,
-        {
-          headers: {
-            accept: "application/json, text/plain, */*",
-            "accept-language": "en-US,en;q=0.9,ja;q=0.8",
-            "cache-control": "no-cache",
-            pragma: "no-cache",
-            "sec-ch-ua":
-              '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
-            "sec-ch-ua-mobile": "?0",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-site",
-            "tch-app-version": "",
-            "tch-device-id": "",
-            "x-csrf-token": "XJVEF4AnLtZqcFJ87XeJaV1nJxGC5HrAkMy9QCHA",
-            "x-requested-with": "XMLHttpRequest",
-          },
-          referrer: "https://order.thecoffeehouse.com/",
-          referrerPolicy: "strict-origin-when-cross-origin",
-          body: null,
-          method: "GET",
-          mode: "cors",
-          credentials: "omit",
-        }
-      )
-        .then((response) => response.json())
-        .then((ListAddress) => {
-          this.setState({ getAddress: ListAddress });
-        });
-    }
+    fetch(
+      `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${e.target.value.toLowerCase()}&from=TCH-WEB`,
+      {
+        headers: {
+          accept: "application/json, text/plain, */*",
+          "accept-language": "en-US,en;q=0.9,ja;q=0.8",
+          "cache-control": "no-cache",
+          pragma: "no-cache",
+          "sec-ch-ua":
+            '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
+          "sec-ch-ua-mobile": "?0",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-site",
+          "tch-app-version": "",
+          "tch-device-id": "",
+          "x-csrf-token": "XJVEF4AnLtZqcFJ87XeJaV1nJxGC5HrAkMy9QCHA",
+          "x-requested-with": "XMLHttpRequest",
+        },
+        referrer: "https://order.thecoffeehouse.com/",
+        referrerPolicy: "strict-origin-when-cross-origin",
+        body: null,
+        method: "GET",
+        mode: "cors",
+        credentials: "omit",
+      }
+    )
+      .then((response) => response.json())
+      .then((ListAddress) => {
+        this.setState({ getAddress: ListAddress });
+      });
   }
   checkInside = (e) => {
     if (
@@ -175,33 +172,48 @@ class Header extends Component {
             ) : null}
           </div>
           <div className="address_search">
-            <form
-              action="#"
+            <SearchForm
               className="order_input"
-              onSubmit={(e) => {
-                this.noneSubmit(e);
-              }}
+              icon="fas fa-map-marker-alt"
               onClick={() => setTimeout(this.openAddress, 200)}
               onBlur={() => setTimeout(this.closeAddress, 200)}
-            >
-              <i className="fas fa-map-marker-alt"></i>
-              <InputSearch
-                type="text"
-                value={this.state.address}
-                placeholder="Nhập địa chỉ giao hàng"
-                onChange={(e) => this.changeInput(e)}
-              />
-            </form>
+              type="text"
+              placeholder="Nhập địa chỉ giao hàng"
+              name="address"
+              onChange={(e) => this.changeInput(e)}
+            />
             {this.state.toogleAddress ? (
               <ListAddress
                 callback={this.callback}
                 Data={getAddress}
                 className=""
+                address={this.state.address}
               />
             ) : null}
           </div>
         </div>
-        <Button className="login" Text="Đăng nhập" />
+        <div className="toogle_timer flex_timer">
+          <Button className="login" Text="Đăng nhập" />
+          {this.props.amount > 0 ? (
+            <div className="flex-timer">
+              <span className="total_amount"> {this.props.amount}</span>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="7.3" cy="17.3" r="1.4"></circle>
+                <circle cx="13.3" cy="17.3" r="1.4"></circle>
+                <polyline
+                  fill="none"
+                  stroke="#000"
+                  points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"
+                ></polyline>
+              </svg>
+            </div>
+          ) : null}
+        </div>
       </header>
     );
   }
