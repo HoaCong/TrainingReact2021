@@ -195,8 +195,8 @@ class Header extends Component {
         <div className="toogle_timer flex_timer">
           <Button className="login" Text="Đăng nhập" />
           {this.props.amount > 0 ? (
-            <div className="flex-timer">
-              <span className="total_amount"> {this.props.amount}</span>
+            <div className="flex_timer">
+              <div className="total_amount"> {this.props.amount}</div>
               <svg
                 width="24"
                 height="24"

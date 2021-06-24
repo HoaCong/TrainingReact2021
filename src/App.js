@@ -13,7 +13,6 @@ class App extends Component {
     this.setState({
       totalAmount: data,
     });
-    console.log(data);
   };
   render() {
     return (

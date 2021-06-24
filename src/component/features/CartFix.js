@@ -9,7 +9,9 @@ class CartContainer extends Component {
       feeShip = 0;
     if (this.props.listOrder != null)
       this.props.listOrder.map(
-        (item) => (totalAmount += item.amount) && (totalPrice += item.price)
+        (item) =>
+          (totalAmount += item.amount) &&
+          (totalPrice += (item.price + item.priceTopping) * item.amount)
       );
     return (
       <section className={this.props.classCart}>
@@ -43,7 +45,7 @@ class CartContainer extends Component {
                     <div>
                       <Price
                         className="no-margin"
-                        price={item.price}
+                        price={(item.price + item.priceTopping) * item.amount}
                         unit="đ"
                       />
                     </div>

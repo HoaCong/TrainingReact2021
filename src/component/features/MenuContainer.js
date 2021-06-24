@@ -18,7 +18,6 @@ class MenuContainer extends Component {
   }
 
   activeElement = (data) => {
-    this.props.changeActive(data);
     if (document.querySelectorAll(".active-cat").length > 0) {
       document.querySelector(".active-cat").classList.remove("active-cat");
     }

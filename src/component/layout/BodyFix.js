@@ -24,6 +24,7 @@ class Body extends Component {
       amount: 1,
       price: null,
       indexItem: -1,
+      priceTopping: null,
     };
   }
   resetIndexItem = () => {
@@ -41,7 +42,15 @@ class Body extends Component {
       this.props.getAmount(totalAmount);
     }
   };
-  addListOrder = (product_name, size, topping, description, amount, price) => {
+  addListOrder = (
+    product_name,
+    size,
+    topping,
+    description,
+    amount,
+    priceTopping,
+    price
+  ) => {
     let obj = {
       product_name: product_name,
       productOrder: this.state.itemOrder,
@@ -49,60 +58,90 @@ class Body extends Component {
       topping: topping,
       description: description,
       amount: amount,
+      priceTopping: priceTopping,
       price: price,
     };
-    if (this.state.listOrder.length === 0) {
-      if (amount > 0) {
-        this.setState({
-          listOrder: [...this.state.listOrder, obj],
-        });
-        this.getAmount([...this.state.listOrder, obj]);
-      }
-    } else {
-      if (this.state.indexItem >= 0 && amount > 0) {
-        this.state.listOrder.map((item, index) =>
-          item.product_name === product_name && this.state.indexItem === index
-            ? ((item.amount = amount),
-              (item.size = size),
-              (item.price = price),
-              (item.topping = topping),
-              (item.description = description))
-            : null
-        );
-        this.getAmount(this.state.listOrder);
-        this.resetIndexItem();
-      } else {
-        if (this.state.indexItem >= 0 && amount === 0) {
-          let removeItem = this.state.listOrder.filter(
-            (item, index) => index !== this.state.indexItem
-          );
-          this.setState({
-            listOrder: removeItem,
-          });
-          this.getAmount(removeItem);
-          this.resetIndexItem();
-        } else {
-          let a = 1;
-          this.state.listOrder.map((item) =>
-            item.product_name === product_name &&
-            item.size === size &&
-            JSON.stringify(item.topping) === JSON.stringify(topping)
-              ? ((item.amount += amount),
-                (item.price += price),
-                (a *= -1),
-                (item.description = description))
-              : (a *= 1)
-          );
-          this.getAmount(this.state.listOrder);
-          if (a === 1) {
-            this.setState({
-              listOrder: [...this.state.listOrder, obj],
-            });
-            this.getAmount([...this.state.listOrder, obj]);
-          }
-        }
-      }
+
+    let tmpCart = this.state.listOrder;
+    if (this.state.indexItem !== -1) {
+      tmpCart = tmpCart.filter((item, index) => index !== this.state.indexItem);
+      this.setState({
+        listOrder: tmpCart,
+      });
     }
+    let a = 1;
+    tmpCart.map((item) =>
+      item.product_name === product_name &&
+      item.size === size &&
+      item.description === description &&
+      JSON.stringify(item.topping) === JSON.stringify(topping)
+        ? ((item.amount += amount),
+          (item.price = price),
+          (item.priceTopping = priceTopping),
+          (a *= -1),
+          (item.description = description))
+        : (a *= 1)
+    );
+    if (a === 1) {
+      let cartItem = [...tmpCart, obj].filter((item) => item.amount > 0);
+      this.setState({
+        listOrder: cartItem,
+      });
+    }
+    this.resetIndexItem();
+    // if (this.state.listOrder.length === 0) {
+    //   if (amount > 0) {
+    //     this.setState({
+    //       listOrder: [...this.state.listOrder, obj],
+    //     });
+    //     this.getAmount([...this.state.listOrder, obj]);
+    //   }
+    // } else {
+    //   if (this.state.indexItem >= 0 && amount > 0) {
+    //     this.state.listOrder.map((item, index) =>
+    //       item.product_name === product_name && this.state.indexItem === index
+    //         ? ((item.amount = amount),
+    //           (item.size = size),
+    //           (item.price = price),
+    //           (item.topping = topping),
+    //           (item.priceTopping = priceTopping),
+    //           (item.description = description))
+    //         : null
+    //     );
+    //     this.getAmount(this.state.listOrder);
+    //     this.resetIndexItem();
+    //   } else {
+    //     if (this.state.indexItem >= 0 && amount === 0) {
+    //       let removeItem = this.state.listOrder.filter(
+    //         (item, index) => index !== this.state.indexItem
+    //       );
+    //       this.setState({
+    //         listOrder: removeItem,
+    //       });
+    //       this.getAmount(removeItem);
+    //       this.resetIndexItem();
+    //     } else {
+    //       let a = 1;
+    //       this.state.listOrder.map((item) =>
+    //         item.product_name === product_name &&
+    //         item.size === size &&
+    //         JSON.stringify(item.topping) === JSON.stringify(topping)
+    //           ? ((item.amount += amount),
+    //             (item.price += price),
+    //             (a *= -1),
+    //             (item.description = description))
+    //           : (a *= 1)
+    //       );
+    //       this.getAmount(this.state.listOrder);
+    //       if (a === 1) {
+    //         this.setState({
+    //           listOrder: [...this.state.listOrder, obj],
+    //         });
+    //         this.getAmount([...this.state.listOrder, obj]);
+    //       }
+    //     }
+    //   }
+    // }
   };
   toogleOrder = (data) => {
     this.setState({
@@ -112,8 +151,10 @@ class Body extends Component {
       topping: [],
       desc: null,
       amount: 1,
+      priceTopping: 0,
       price: data.price,
     });
+    this.resetIndexItem();
   };
   editItemOrder = (data, index) => {
     this.setState({
@@ -121,17 +162,14 @@ class Body extends Component {
       itemOrder: data.productOrder,
       size: data.size,
       topping: data.topping,
-      desc: data.description,
+      // desc: data.description,
       amount: data.amount,
-      price: data.price / data.amount,
+      price: data.price,
+      priceTopping: data.priceTopping,
       indexItem: index,
     });
   };
-  changeActive = (id) => {
-    this.setState({
-      active: id,
-    });
-  };
+
   mergeData = (category, product) => {
     category.map((itemcat) => {
       let arr = [];
@@ -202,6 +240,7 @@ class Body extends Component {
               amount={this.state.amount}
               price={this.state.price}
               editItem={this.state.editItem}
+              priceTopping={this.state.priceTopping}
             />
           ) : null}
           <CartContainer

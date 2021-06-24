@@ -12,6 +12,7 @@ class OrderContainer extends Component {
       desc: this.props.desc,
       amount: this.props.amount,
       price: this.props.price,
+      priceTopping: this.props.priceTopping,
     };
   }
   setItemOrder = (data) => {
@@ -24,7 +25,8 @@ class OrderContainer extends Component {
       this.state.topping,
       this.state.desc,
       this.state.amount,
-      this.state.price * this.state.amount
+      this.state.priceTopping,
+      this.state.price
     );
     this.setItemOrder(0);
   };
@@ -52,12 +54,12 @@ class OrderContainer extends Component {
       ? (tmp = this.state.topping.filter((item) => item !== data.code)) &&
         this.setState({
           topping: tmp,
-          price: this.state.price - data.price,
+          priceTopping: this.state.priceTopping - data.price,
         })
       : tmp.push(data.code) &&
         this.setState({
           topping: tmp,
-          price: this.state.price + data.price,
+          priceTopping: this.state.priceTopping + data.price,
         });
   };
   getDesc = (e) => {
@@ -181,7 +183,10 @@ class OrderContainer extends Component {
                   <div className="add_cart">Thêm vào giỏ</div>
                   <Price
                     className="no-margin price_cart"
-                    price={this.state.price * this.state.amount}
+                    price={
+                      (this.state.price + this.state.priceTopping) *
+                      this.state.amount
+                    }
                     unit="đ"
                   />
                 </div>
