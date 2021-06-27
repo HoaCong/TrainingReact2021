@@ -14,6 +14,7 @@ class Body extends Component {
       isLoaded: false,
       allData: [],
       active: null,
+      menu: [],
       // Order
       order: false,
       itemOrder: [],
@@ -25,6 +26,9 @@ class Body extends Component {
       price: null,
       indexItem: -1,
       priceTopping: null,
+      // totalAmount&Price
+      totalAmount: 0,
+      totalPrice: 0,
     };
   }
   resetIndexItem = () => {
@@ -35,14 +39,18 @@ class Body extends Component {
   getAmount = (data) => {
     let totalAmount = 0,
       totalPrice = 0;
-    if (data.length >= 0) {
-      data.map(
-        (item) => (totalAmount += item.amount) && (totalPrice += item.price)
-      );
-      this.props.getAmount(totalAmount);
-    }
+    data.map(
+      (item) =>
+        (totalAmount += item.amount) && (totalPrice += item.price * item.amount)
+    );
+    this.props.getAmount(totalAmount);
+    this.setState({
+      totalAmount: totalAmount,
+      totalPrice: totalPrice,
+    });
   };
-  addListOrder = (
+  addToCart = (
+    _id,
     product_name,
     size,
     topping,
@@ -52,8 +60,9 @@ class Body extends Component {
     price
   ) => {
     let obj = {
+      _id,
       product_name: product_name,
-      productOrder: this.state.itemOrder,
+      topping_list: this.state.itemOrder.topping_list,
       size: size,
       topping: topping,
       description: description,
@@ -65,83 +74,39 @@ class Body extends Component {
     let tmpCart = this.state.listOrder;
     if (this.state.indexItem !== -1) {
       tmpCart = tmpCart.filter((item, index) => index !== this.state.indexItem);
-      this.setState({
-        listOrder: tmpCart,
-      });
     }
-    let a = 1;
+    let addOrEdit = 1;
     tmpCart.map((item) =>
-      item.product_name === product_name &&
+      item._id === _id &&
       item.size === size &&
       item.description === description &&
-      JSON.stringify(item.topping) === JSON.stringify(topping)
+      (item.topping.length > 1
+        ? item.topping.length === topping.length
+        : JSON.stringify(item.topping) === JSON.stringify(topping))
         ? ((item.amount += amount),
           (item.price = price),
           (item.priceTopping = priceTopping),
-          (a *= -1),
+          (addOrEdit *= -1),
           (item.description = description))
-        : (a *= 1)
+        : (addOrEdit *= 1)
     );
-    if (a === 1) {
-      let cartItem = [...tmpCart, obj].filter((item) => item.amount > 0);
+    if (addOrEdit === 1) {
       this.setState({
-        listOrder: cartItem,
+        listOrder: [...tmpCart, obj].filter((item) => item.amount > 0),
       });
+      localStorage.setItem(
+        "cartOrder",
+        JSON.stringify([...tmpCart, obj].filter((item) => item.amount > 0))
+      );
+      this.getAmount([...tmpCart, obj].filter((item) => item.amount > 0));
+    } else {
+      this.setState({
+        listOrder: tmpCart,
+      });
+      localStorage.setItem("cartOrder", JSON.stringify(tmpCart));
+      this.getAmount(tmpCart);
     }
     this.resetIndexItem();
-    // if (this.state.listOrder.length === 0) {
-    //   if (amount > 0) {
-    //     this.setState({
-    //       listOrder: [...this.state.listOrder, obj],
-    //     });
-    //     this.getAmount([...this.state.listOrder, obj]);
-    //   }
-    // } else {
-    //   if (this.state.indexItem >= 0 && amount > 0) {
-    //     this.state.listOrder.map((item, index) =>
-    //       item.product_name === product_name && this.state.indexItem === index
-    //         ? ((item.amount = amount),
-    //           (item.size = size),
-    //           (item.price = price),
-    //           (item.topping = topping),
-    //           (item.priceTopping = priceTopping),
-    //           (item.description = description))
-    //         : null
-    //     );
-    //     this.getAmount(this.state.listOrder);
-    //     this.resetIndexItem();
-    //   } else {
-    //     if (this.state.indexItem >= 0 && amount === 0) {
-    //       let removeItem = this.state.listOrder.filter(
-    //         (item, index) => index !== this.state.indexItem
-    //       );
-    //       this.setState({
-    //         listOrder: removeItem,
-    //       });
-    //       this.getAmount(removeItem);
-    //       this.resetIndexItem();
-    //     } else {
-    //       let a = 1;
-    //       this.state.listOrder.map((item) =>
-    //         item.product_name === product_name &&
-    //         item.size === size &&
-    //         JSON.stringify(item.topping) === JSON.stringify(topping)
-    //           ? ((item.amount += amount),
-    //             (item.price += price),
-    //             (a *= -1),
-    //             (item.description = description))
-    //           : (a *= 1)
-    //       );
-    //       this.getAmount(this.state.listOrder);
-    //       if (a === 1) {
-    //         this.setState({
-    //           listOrder: [...this.state.listOrder, obj],
-    //         });
-    //         this.getAmount([...this.state.listOrder, obj]);
-    //       }
-    //     }
-    //   }
-    // }
   };
   toogleOrder = (data) => {
     this.setState({
@@ -157,12 +122,13 @@ class Body extends Component {
     this.resetIndexItem();
   };
   editItemOrder = (data, index) => {
+    let itemEdit = this.state.menu.filter((item) => item._id === data._id);
     this.setState({
       order: !this.state.order,
-      itemOrder: data.productOrder,
+      itemOrder: itemEdit[0],
       size: data.size,
       topping: data.topping,
-      // desc: data.description,
+      desc: data.description,
       amount: data.amount,
       price: data.price,
       priceTopping: data.priceTopping,
@@ -195,13 +161,19 @@ class Body extends Component {
             const newData = this.mergeData(categories, menus.data);
             this.setState({
               allData: newData,
+              menu: menus.data,
               isLoaded: true,
               active: newData[0].id,
             });
           });
       });
+    const cartOrder = localStorage.getItem("cartOrder");
+    if (cartOrder) {
+      this.setState({
+        listOrder: JSON.parse(cartOrder),
+      });
+    }
   }
-
   render() {
     const { isLoaded, allData } = this.state;
     if (!isLoaded) {
@@ -233,7 +205,7 @@ class Body extends Component {
             <OrderContainer
               toogleOrder={this.toogleOrder}
               itemOrder={this.state.itemOrder}
-              addListOrder={this.addListOrder}
+              addToCart={this.addToCart}
               size={this.state.size}
               topping={this.state.topping}
               desc={this.state.desc}
@@ -247,6 +219,8 @@ class Body extends Component {
             classCart="cart"
             listOrder={this.state.listOrder}
             editItemOrder={this.editItemOrder}
+            totalPrice={this.state.totalPrice}
+            totalAmount={this.state.totalAmount}
           />
         </div>
       );

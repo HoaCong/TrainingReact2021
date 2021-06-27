@@ -16,6 +16,12 @@ input {
 button:hover {
   border: 1px solid #999;
 }
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: unset;
+}
 a {
   text-decoration: none;
 }
@@ -208,6 +214,7 @@ article {
   bottom: 12px;
   font-size: 30px;
   color: #ea8025;
+  cursor: pointer;
 }
 /* Cart */
 .cart .box_order {
@@ -223,6 +230,9 @@ article {
   text-transform: uppercase;
   padding: 12px 0;
   border: 1px solid #ea8025;
+}
+.seecart:disabled {
+  opacity: 0.5;
 }
 .ele_order {
   display: flex;

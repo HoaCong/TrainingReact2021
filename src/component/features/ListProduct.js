@@ -15,8 +15,8 @@ class ListProduct extends Component {
     );
     let arr = [];
     list.map((item) => (item !== null ? arr.push(item) : null));
-    let result = arr.some((e) => {
-      return e.length > 0;
+    let result = arr.some((item) => {
+      return item.length > 0;
     });
     if (!result) {
       return (

@@ -43,7 +43,6 @@ class MenuContainer extends Component {
     window.removeEventListener("scroll", this.windowScroll);
   }
   render() {
-    const Data = this.props.ConcatList;
     return (
       <section className={this.props.classMenu}>
         <SearchForm
@@ -55,7 +54,7 @@ class MenuContainer extends Component {
         />
 
         <ListProduct
-          ProductList={Data}
+          ProductList={this.props.ConcatList}
           KeyWord={this.state.keyword}
           toogleOrder={this.props.toogleOrder}
         />

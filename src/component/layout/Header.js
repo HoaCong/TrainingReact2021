@@ -23,34 +23,33 @@ class ListAddress extends Component {
   }
   render() {
     const Address = this.props.Data;
-    if (this.props.address.length < 5) return <div></div>;
+    if (this.props.address.length < 6 || Address === null) return <div></div>;
     if (Address.length === 0)
       return (
         <div className="result_order_input result_error">
           <div>Chuỗi không hợp lệ</div>
         </div>
       );
-    else
-      return (
-        <ul className={"result_order_input " + this.props.className}>
-          {Address.addresses.map((item) => (
-            <ItemAddress
-              onClick={() => this.getValue(item.full_address)}
-              key={item.full_address}
-              Icon="fas fa-map-marker-alt"
-              p_Address={item.title_address}
-              p_Region={item.full_address}
-            />
-          ))}
-        </ul>
-      );
+    return (
+      <ul className={"result_order_input " + this.props.className}>
+        {Address.map((item) => (
+          <ItemAddress
+            onClick={() => this.getValue(item.full_address)}
+            key={item.full_address}
+            Icon="fas fa-map-marker-alt"
+            p_Address={item.title_address}
+            p_Region={item.full_address}
+          />
+        ))}
+      </ul>
+    );
   }
 }
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      getAddress: [],
+      getAddress: null,
       address: "",
       toogleAddress: false,
       toogleTimer: false,
@@ -58,6 +57,7 @@ class Header extends Component {
       textTimer: "GIAO NGAY",
       today: null,
     };
+    this.debounceChangeInput = React.createRef(null);
     this.insideTimer = React.createRef();
   }
   changeTextTimer = (data) => {
@@ -101,11 +101,9 @@ class Header extends Component {
       address: data,
     });
   };
-
-  changeInput(e) {
-    this.setState({ address: e.target.value });
+  searchApiAddress = (key) => {
     fetch(
-      `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${e.target.value.toLowerCase()}&from=TCH-WEB`,
+      `https://api.thecoffeehouse.com/api/v5/map/autocomplete?key=${key}&from=TCH-WEB`,
       {
         headers: {
           accept: "application/json, text/plain, */*",
@@ -133,8 +131,20 @@ class Header extends Component {
     )
       .then((response) => response.json())
       .then((ListAddress) => {
-        this.setState({ getAddress: ListAddress });
+        this.setState({ getAddress: ListAddress.addresses });
       });
+  };
+  changeInput(e) {
+    const key = e.target.value;
+    this.setState({ address: key });
+    if (key.length > 5) {
+      if (this.debounceChangeInput.current) {
+        clearTimeout(this.debounceChangeInput.current);
+      }
+      this.debounceChangeInput.current = setTimeout(() => {
+        this.searchApiAddress(key);
+      }, 500);
+    }
   }
   checkInside = (e) => {
     if (
@@ -156,7 +166,6 @@ class Header extends Component {
   }
   render() {
     const { getAddress } = this.state;
-
     return (
       <header>
         <Image Src={logo} Alt="Logo Cửa Hàng" Size="logo" />
@@ -175,11 +184,12 @@ class Header extends Component {
             <SearchForm
               className="order_input"
               icon="fas fa-map-marker-alt"
-              onClick={() => setTimeout(this.openAddress, 200)}
-              onBlur={() => setTimeout(this.closeAddress, 200)}
+              onClick={() => setTimeout(this.openAddress, 150)}
+              onBlur={() => setTimeout(this.closeAddress, 150)}
               type="text"
               placeholder="Nhập địa chỉ giao hàng"
               name="address"
+              value={this.state.address || ""}
               onChange={(e) => this.changeInput(e)}
             />
             {this.state.toogleAddress ? (

@@ -101,23 +101,6 @@ class OrderTimer extends Component {
       : this.props.changeTextTimer(`${this.state.currentDate}  ${a}`);
   };
   render() {
-    const iconCheck = (
-      <span className="icon_check">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polyline
-            fill="none"
-            stroke="#000"
-            strokeWidth="1.1"
-            points="4,10 8,15 17,4"
-          ></polyline>
-        </svg>
-      </span>
-    );
     return (
       <div className="order_time">
         <div className="padding_timer flex_timer">
@@ -148,7 +131,21 @@ class OrderTimer extends Component {
             </span>
             <span>GIAO NGAY</span>
           </div>
-          {iconCheck}
+          <span className="icon_check">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                fill="none"
+                stroke="#000"
+                strokeWidth="1.1"
+                points="4,10 8,15 17,4"
+              ></polyline>
+            </svg>
+          </span>
         </div>
         <div className="padding_timer flex_timer" onClick={this.openTimer}>
           <div className="flex_timer">

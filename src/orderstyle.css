@@ -141,11 +141,12 @@
   height: 40px;
   box-sizing: border-box;
   padding: 0 20px;
+  margin: 8px 0;
 }
 .btn_timer {
   font-weight: 400;
   padding: 10px 0;
-  margin: 16px 0;
+  margin: 8px 0 16px 0;
 }
 .flex_timer {
   display: flex;

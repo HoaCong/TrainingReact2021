@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Button from "../common/Button";
 import Price from "../common/Price";
+import Image from "../common/Image";
 import InputCheckbox from "../common/InputCheckbox";
 import SearchForm from "../common/SearchForm";
 class OrderContainer extends Component {
@@ -19,7 +20,8 @@ class OrderContainer extends Component {
     this.props.toogleOrder(data);
   };
   addOrder = () => {
-    this.props.addListOrder(
+    this.props.addToCart(
+      this.props.itemOrder._id,
       this.props.itemOrder.product_name,
       this.state.size,
       this.state.topping,
@@ -88,7 +90,7 @@ class OrderContainer extends Component {
             onClick={() => this.setItemOrder(0)}
           ></i>
           <div className="head_order">
-            <img src={itemOrder.image} width="80" height="80" alt="" />
+            <Image Size="thumbnail" Src={itemOrder.image} Alt="Ảnh sản phẩm" />
             <article>
               <h4 className="name_product">{itemOrder.product_name}</h4>
               <p className="current_option">{this.state.size}</p>
@@ -158,8 +160,8 @@ class OrderContainer extends Component {
               type="text"
               placeholder="Thêm ghi chú món này"
               name="description"
+              value={this.state.desc || ""}
               onChange={(e) => this.getDesc(e)}
-              value={this.props.desc ? this.props.desc : undefined}
             />
           </div>
           <hr />
