@@ -12,16 +12,7 @@ class OrderTimer extends Component {
     };
   }
   getOptionDate = (e) => {
-    let t_Start = new Date();
-    t_Start.setHours(7);
-    t_Start.setMinutes(30);
-    let t_Close = new Date();
-    t_Close.setHours(20);
-    t_Close.setMinutes(30);
-    this.setState({
-      timeStart: t_Start,
-      timeClose: t_Close,
-    });
+    this.setDefaultTime();
     this.setState({
       currentDate: e.target.value,
     });
@@ -34,23 +25,30 @@ class OrderTimer extends Component {
         this.state.timeClose
       );
   };
-  openTimer = () => {
+  setDefaultTime = () => {
     let t_Start = new Date();
     t_Start.setHours(7);
     t_Start.setMinutes(30);
     let t_Close = new Date();
     t_Close.setHours(20);
-    t_Close.setMinutes(30);
+    t_Close.setMinutes(31);
     this.setState({
       timeStart: t_Start,
       timeClose: t_Close,
     });
+  };
+  openTimer = () => {
     this.setState({
       open: true,
     });
     if (this.props.today === this.state.currentDate)
-      this.showListTimer(this.props.listDate[0], 0, t_Close);
-    else this.showListTimer(this.props.listDate[0], t_Start, t_Close);
+      this.showListTimer(this.props.listDate[0], 0, this.state.timeClose);
+    else
+      this.showListTimer(
+        this.props.listDate[0],
+        this.state.timeStart,
+        this.state.timeClose
+      );
   };
   showListTimer = (today, t_Start, t_Close) => {
     let tmpArray = [];
@@ -58,16 +56,18 @@ class OrderTimer extends Component {
 
     if (t_Start !== 0) nextTime = t_Start;
     if (today === this.props.today) {
-      let a = new Date();
-      a.setHours(a.getHours() + 3);
-      a.setMinutes(0);
+      let midpointTime = new Date();
+      midpointTime.setHours(midpointTime.getHours() + 3);
+      midpointTime.setMinutes(0);
       for (
         nextTime.setMinutes(
-          nextTime.getMinutes() > 30
-            ? nextTime.getMinutes() - nextTime.getMinutes() + 105
-            : nextTime.getMinutes() - nextTime.getMinutes() + 60
+          nextTime.getMinutes() < 15
+            ? nextTime.getMinutes() - nextTime.getMinutes() + 45
+            : nextTime.getMinutes() < 30
+            ? nextTime.getMinutes() - nextTime.getMinutes() + 60
+            : nextTime.getMinutes() - nextTime.getMinutes() + 90
         );
-        nextTime <= a;
+        nextTime <= midpointTime;
         nextTime.setMinutes(nextTime.getMinutes() + 15)
       ) {
         tmpArray.push(
@@ -100,6 +100,9 @@ class OrderTimer extends Component {
       ? this.props.changeTextTimer("GIAO NGAY")
       : this.props.changeTextTimer(`${this.state.currentDate}  ${a}`);
   };
+  componentDidMount() {
+    this.setDefaultTime();
+  }
   render() {
     return (
       <div className="order_time">

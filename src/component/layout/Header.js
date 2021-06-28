@@ -64,6 +64,7 @@ class Header extends Component {
     this.setState({
       textTimer: data,
     });
+    localStorage.setItem("timer_order", data);
   };
   openAddress = () => {
     this.setState({
@@ -159,6 +160,11 @@ class Header extends Component {
 
   componentDidMount() {
     document.addEventListener("mousedown", this.checkInside);
+    if (localStorage.getItem("timer_order")) {
+      this.setState({
+        textTimer: localStorage.getItem("timer_order"),
+      });
+    }
   }
 
   componentWillUnmount() {
