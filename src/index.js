@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import "./loading.css";
-import "./orderstyle.css";
+import "./css/index.css";
+import "./css/loading.css";
+import "./css/orderstyle.css";
+import "./css/login.css";
 import App from "./App";
 
 ReactDOM.render(

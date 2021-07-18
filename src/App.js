@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Header from "./component/layout/Header";
 import Body from "./component/layout/BodyFix";
+import Login from "./component/layout/Login";
 import Footer from "./component/layout/Footer";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -16,11 +18,19 @@ class App extends Component {
   };
   render() {
     return (
-      <React.StrictMode>
+      <Router>
         <Header amount={this.state.totalAmount} />
-        <Body getAmount={this.getAmount} />
+        <Route
+          path="/"
+          exact
+          render={() => <Body getAmount={this.getAmount} />}
+        ></Route>
+        {/* 2 cách */}
+        <Route path="/login" component={Login} />
+        {/* <Route path="/login" render={(props) => <Login {...props} />} /> */}
+
         <Footer />
-      </React.StrictMode>
+      </Router>
     );
   }
 }

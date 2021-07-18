@@ -64,7 +64,10 @@ header button {
   font-size: 12.25px;
   padding: 0 32px;
 }
-
+.toogle_timer a {
+  display: block;
+  height: 100%;
+}
 header div.nav_header {
   display: flex;
 }

@@ -172,6 +172,7 @@ class Body extends Component {
       this.setState({
         listOrder: JSON.parse(cartOrder),
       });
+      this.getAmount(JSON.parse(cartOrder));
     }
   }
   render() {

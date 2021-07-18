@@ -4,6 +4,7 @@ import Button from "../common/Button";
 import Image from "../common/Image";
 import SearchForm from "../common/SearchForm";
 import OrderTimer from "../features/OrderTimer";
+import { Link } from "react-router-dom";
 class ItemAddress extends Component {
   render() {
     return (
@@ -174,7 +175,9 @@ class Header extends Component {
     const { getAddress } = this.state;
     return (
       <header>
-        <Image Src={logo} Alt="Logo Cửa Hàng" Size="logo" />
+        <Link to="/">
+          <Image Src={logo} Alt="Logo Cửa Hàng" Size="logo" />
+        </Link>
         <div className="nav_header">
           <div className="toogle_timer" ref={this.insideTimer}>
             <Button Text={this.state.textTimer} onClick={this.toogleTimer} />
@@ -209,7 +212,9 @@ class Header extends Component {
           </div>
         </div>
         <div className="toogle_timer flex_timer">
-          <Button className="login" Text="Đăng nhập" />
+          <Link to="/login">
+            <Button className="login" Text="Đăng nhập" />
+          </Link>
           {this.props.amount > 0 ? (
             <div className="flex_timer">
               <div className="total_amount"> {this.props.amount}</div>

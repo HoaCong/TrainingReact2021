@@ -9,6 +9,8 @@ class InputSearch extends Component {
         placeholder={this.props.placeholder}
         name={this.props.name}
         onChange={this.props.onChange}
+        maxLength={this.props.maxLength}
+        min={this.props.min}
       />
     );
   }
