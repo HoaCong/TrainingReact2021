@@ -14,101 +14,126 @@ class Body extends Component {
       isLoaded: false,
       allData: [],
       active: null,
+      menu: [],
       // Order
       order: false,
       itemOrder: [],
+      listOrder: [],
       size: null,
-      topping: null,
+      topping: [],
       desc: null,
       amount: 1,
       price: null,
-      listOrder: [],
+      indexItem: -1,
+      priceTopping: null,
+      // totalAmount&Price
+      totalAmount: 0,
+      totalPrice: 0,
     };
   }
-  addListOrder = (product_name, size, topping, description, amount, price) => {
+  resetIndexItem = () => {
+    this.setState({
+      indexItem: -1,
+    });
+  };
+  getAmount = (data) => {
+    let totalAmount = 0,
+      totalPrice = 0;
+    data.map(
+      (item) =>
+        (totalAmount += item.amount) && (totalPrice += item.price * item.amount)
+    );
+    this.props.getAmount(totalAmount);
+    this.setState({
+      totalAmount: totalAmount,
+      totalPrice: totalPrice,
+    });
+  };
+  addToCart = (
+    _id,
+    product_name,
+    size,
+    topping,
+    description,
+    amount,
+    priceTopping,
+    price
+  ) => {
     let obj = {
+      _id,
       product_name: product_name,
-      itemOrder: this.state.itemOrder,
+      topping_list: this.state.itemOrder.topping_list,
       size: size,
       topping: topping,
       description: description,
       amount: amount,
+      priceTopping: priceTopping,
       price: price,
     };
-    if (this.state.listOrder.length === 0) {
-      this.setState({
-        listOrder: [...this.state.listOrder, obj],
-      });
-    } else {
-      let a = 1;
-      this.state.listOrder.map((item) =>
-        item.product_name === product_name &&
-        item.size === size &&
-        item.topping === topping
-          ? ((item.amount += amount), (item.price += price), (a *= -1))
-          : (a *= 1)
-      );
-      if (a === 1)
-        this.setState({
-          listOrder: [...this.state.listOrder, obj],
-        });
+
+    let tmpCart = this.state.listOrder;
+    if (this.state.indexItem !== -1) {
+      tmpCart = tmpCart.filter((item, index) => index !== this.state.indexItem);
     }
+    let addOrEdit = 1;
+    tmpCart.map((item) =>
+      item._id === _id &&
+      item.size === size &&
+      item.description === description &&
+      (item.topping.length > 1
+        ? item.topping.length === topping.length
+        : JSON.stringify(item.topping) === JSON.stringify(topping))
+        ? ((item.amount += amount),
+          (item.price = price),
+          (item.priceTopping = priceTopping),
+          (addOrEdit *= -1),
+          (item.description = description))
+        : (addOrEdit *= 1)
+    );
+    if (addOrEdit === 1) {
+      this.setState({
+        listOrder: [...tmpCart, obj].filter((item) => item.amount > 0),
+      });
+      localStorage.setItem(
+        "cartOrder",
+        JSON.stringify([...tmpCart, obj].filter((item) => item.amount > 0))
+      );
+      this.getAmount([...tmpCart, obj].filter((item) => item.amount > 0));
+    } else {
+      this.setState({
+        listOrder: tmpCart,
+      });
+      localStorage.setItem("cartOrder", JSON.stringify(tmpCart));
+      this.getAmount(tmpCart);
+    }
+    this.resetIndexItem();
   };
   toogleOrder = (data) => {
     this.setState({
       order: !this.state.order,
       itemOrder: data,
-      price: data.price,
-      topping: null,
+      size: null,
+      topping: [],
+      desc: null,
       amount: 1,
+      priceTopping: 0,
+      price: data.price,
     });
+    this.resetIndexItem();
   };
   editItemOrder = (data, index) => {
+    let itemEdit = this.state.menu.filter((item) => item._id === data._id);
     this.setState({
       order: !this.state.order,
-      itemOrder: data.itemOrder,
-      price: data.price / data.amount,
-      description: data.description,
-      topping: data.topping,
+      itemOrder: itemEdit[0],
       size: data.size,
+      topping: data.topping,
+      desc: data.description,
       amount: data.amount,
+      price: data.price,
+      priceTopping: data.priceTopping,
+      indexItem: index,
     });
-  };
-  changeActive = (id) => {
-    this.setState({
-      active: id,
-    });
-  };
-  changeSize = (data) => {
-    this.setState({
-      size: data,
-    });
-  };
-  changeTopping = (data) => {
-    this.setState({
-      topping: data,
-    });
-  };
-  changeDesc = (data) => {
-    this.setState({
-      description: data,
-    });
-  };
-  changePrice = (data) => {
-    this.setState({
-      price: data,
-    });
-  };
-  changeAmount = (data) => {
-    if (data < 1) {
-      this.setState({
-        amount: 1,
-      });
-    } else {
-      this.setState({
-        amount: data,
-      });
-    }
   };
 
   mergeData = (category, product) => {
@@ -136,13 +161,20 @@ class Body extends Component {
             const newData = this.mergeData(categories, menus.data);
             this.setState({
               allData: newData,
+              menu: menus.data,
               isLoaded: true,
               active: newData[0].id,
             });
           });
       });
+    const cartOrder = localStorage.getItem("cartOrder");
+    if (cartOrder) {
+      this.setState({
+        listOrder: JSON.parse(cartOrder),
+      });
+      this.getAmount(JSON.parse(cartOrder));
+    }
   }
-
   render() {
     const { isLoaded, allData } = this.state;
     if (!isLoaded) {
@@ -174,23 +206,22 @@ class Body extends Component {
             <OrderContainer
               toogleOrder={this.toogleOrder}
               itemOrder={this.state.itemOrder}
+              addToCart={this.addToCart}
               size={this.state.size}
-              changeSize={this.changeSize}
               topping={this.state.topping}
-              changeTopping={this.changeTopping}
-              description={this.state.description}
-              changeDesc={this.changeDesc}
-              price={this.state.price}
-              changePrice={this.changePrice}
+              desc={this.state.desc}
               amount={this.state.amount}
-              changeAmount={this.changeAmount}
-              addListOrder={this.addListOrder}
+              price={this.state.price}
+              editItem={this.state.editItem}
+              priceTopping={this.state.priceTopping}
             />
           ) : null}
           <CartContainer
             classCart="cart"
             listOrder={this.state.listOrder}
             editItemOrder={this.editItemOrder}
+            totalPrice={this.state.totalPrice}
+            totalAmount={this.state.totalAmount}
           />
         </div>
       );

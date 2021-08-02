@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Header from "./component/layout/Header";
-import Body from "./component/layout/BodyFix";
+import Body from "./component/layout/Body";
 import Login from "./component/layout/Login";
 import Footer from "./component/layout/Footer";
 import { BrowserRouter as Router, Route } from "react-router-dom";

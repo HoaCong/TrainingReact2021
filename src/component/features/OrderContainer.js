@@ -1,76 +1,80 @@
 import React, { Component } from "react";
 import Button from "../common/Button";
-import InputSearch from "../common/Input";
 import Price from "../common/Price";
+import Image from "../common/Image";
 import InputCheckbox from "../common/InputCheckbox";
+import SearchForm from "../common/SearchForm";
 class OrderContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listTopping: "",
+      size: this.props.size,
+      topping: this.props.topping,
+      desc: this.props.desc,
+      amount: this.props.amount,
+      price: this.props.price,
+      priceTopping: this.props.priceTopping,
     };
   }
-  addOrder = () => {
-    this.props.addListOrder(
-      this.props.itemOrder.product_name,
-      this.props.size,
-      this.props.topping,
-      this.props.description,
-      this.props.amount,
-      this.props.price * this.props.amount
-    );
-    this.setItemOrder(0);
-  };
-
   setItemOrder = (data) => {
     this.props.toogleOrder(data);
   };
+  addOrder = () => {
+    this.props.addToCart(
+      this.props.itemOrder._id,
+      this.props.itemOrder.product_name,
+      this.state.size,
+      this.state.topping,
+      this.state.desc,
+      this.state.amount,
+      this.state.priceTopping,
+      this.state.price
+    );
+    this.setItemOrder(0);
+  };
   calAmount = (data) => {
-    let amount = this.props.amount + data;
-    this.props.changeAmount(amount);
-  };
-  resetAmount = (data) => {
-    this.props.changeAmount(data);
-  };
-  setSize = (size, price) => {
-    this.props.changeSize(size);
-    this.props.changePrice(price);
-  };
-  setTopping = (data) => {
-    let a = document.getElementById(data.code);
-    if (a.checked) {
-      let add = this.state.listTopping.concat(`${data.product_name} + `);
-      this.props.changeTopping(add);
+    let tmpamount = this.state.amount + data;
+    if (tmpamount < 1) {
       this.setState({
-        listTopping: add,
+        amount: 0,
       });
-      this.props.changePrice(this.props.price + data.price);
     } else {
-      let remove = this.state.listTopping.replace(
-        `${data.product_name} + `,
-        ""
-      );
-      this.props.changeTopping(remove);
       this.setState({
-        listTopping: remove,
+        amount: tmpamount,
       });
-      this.props.changePrice(this.props.price - data.price);
     }
   };
+  setSize = (size, price) => {
+    this.setState({
+      size: size,
+      price: price,
+    });
+  };
+  setTopping = (data) => {
+    let tmp = [...this.state.topping];
+    this.state.topping.includes(data.code)
+      ? (tmp = this.state.topping.filter((item) => item !== data.code)) &&
+        this.setState({
+          topping: tmp,
+          priceTopping: this.state.priceTopping - data.price,
+        })
+      : tmp.push(data.code) &&
+        this.setState({
+          topping: tmp,
+          priceTopping: this.state.priceTopping + data.price,
+        });
+  };
   getDesc = (e) => {
-    this.props.changeDesc(e.target.value);
+    this.setState({
+      desc: e.target.value,
+    });
   };
-  noneSubmit = (e) => {
-    e.preventDefault();
-  };
-  componentDidMount() {
-    let defaultSize = document.querySelector('input[name="size"]');
-    if (defaultSize !== null) defaultSize.setAttribute("checked", "checked");
 
-    let b = document
-      .querySelector('input[checked="checked"]')
-      .getAttribute("value");
-    if (b != null) this.setSize(b, this.props.price);
+  componentDidMount() {
+    if (this.state.size === null) {
+      let b = document.querySelector("input[checked]").getAttribute("value");
+      if (b != null) this.setSize(b, this.state.price);
+    }
   }
   render() {
     const itemOrder = this.props.itemOrder;
@@ -86,14 +90,17 @@ class OrderContainer extends Component {
             onClick={() => this.setItemOrder(0)}
           ></i>
           <div className="head_order">
-            <img src={itemOrder.image} width="80" height="80" alt="" />
+            <Image Size="thumbnail" Src={itemOrder.image} Alt="Ảnh sản phẩm" />
             <article>
               <h4 className="name_product">{itemOrder.product_name}</h4>
-              <p className="current_option">{this.props.size}</p>
+              <p className="current_option">{this.state.size}</p>
               <p className="current_option">
-                {this.props.topping !== null
-                  ? this.props.topping.slice(0, -2)
-                  : null}
+                {itemOrder.topping_list.map((item, index) =>
+                  this.state.topping.includes(item.code)
+                    ? item.product_name +
+                      (index < this.state.topping.length - 1 ? " + " : "")
+                    : null
+                )}
               </p>
             </article>
           </div>
@@ -107,6 +114,9 @@ class OrderContainer extends Component {
                   {itemOrder.variants.map((item, index) => (
                     <InputCheckbox
                       key={index}
+                      checked={
+                        this.state.size === item.val ? true : index === 0
+                      }
                       style={{ order: item.price }}
                       type="radio"
                       id={item.code}
@@ -128,6 +138,9 @@ class OrderContainer extends Component {
                   {itemOrder.topping_list.map((item, index) => (
                     <InputCheckbox
                       key={index}
+                      checked={
+                        this.state.topping.includes(item.code) ? true : false
+                      }
                       type="checkbox"
                       id={item.code}
                       name="topping"
@@ -141,21 +154,15 @@ class OrderContainer extends Component {
                 <hr />
               </div>
             ) : null}
-            <form
-              action=""
+            <SearchForm
               className="order_input order_desc"
-              onSubmit={(e) => {
-                this.noneSubmit(e);
-              }}
-            >
-              <i className="fas fa-pencil-alt"></i>
-              <InputSearch
-                type="text"
-                placeholder="Thêm ghi chú món này"
-                name="description"
-                onChange={(e) => this.getDesc(e)}
-              />
-            </form>
+              icon="fas fa-pencil-alt"
+              type="text"
+              placeholder="Thêm ghi chú món này"
+              name="description"
+              value={this.state.desc || ""}
+              onChange={(e) => this.getDesc(e)}
+            />
           </div>
           <hr />
           <div className="foot_order">
@@ -164,7 +171,7 @@ class OrderContainer extends Component {
                 className="fas fa-minus-circle"
                 onClick={() => this.calAmount(-1)}
               ></i>
-              <div className="amount">{this.props.amount}</div>
+              <div className="amount">{this.state.amount}</div>
               <i
                 className="fas fa-plus-circle"
                 onClick={() => this.calAmount(1)}
@@ -178,7 +185,10 @@ class OrderContainer extends Component {
                   <div className="add_cart">Thêm vào giỏ</div>
                   <Price
                     className="no-margin price_cart"
-                    price={this.props.price * this.props.amount}
+                    price={
+                      (this.state.price + this.state.priceTopping) *
+                      this.state.amount
+                    }
                     unit="đ"
                   />
                 </div>
