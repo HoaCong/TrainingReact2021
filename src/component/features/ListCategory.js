@@ -5,11 +5,7 @@ class ListCategory extends Component {
     return (
       <section className={this.props.classList}>
         <ul>
-          <ItemCategory
-            CatList={this.props.ConcatList}
-            changeActive={this.props.changeActive}
-            active={this.props.active}
-          />
+          <ItemCategory CatList={this.props.data} active={this.props.active} />
         </ul>
       </section>
     );

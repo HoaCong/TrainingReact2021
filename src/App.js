@@ -28,7 +28,6 @@ class App extends Component {
         {/* 2 cách */}
         <Route path="/login" component={Login} />
         {/* <Route path="/login" render={(props) => <Login {...props} />} /> */}
-
         <Footer />
       </Router>
     );

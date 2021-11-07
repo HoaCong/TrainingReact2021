@@ -16,9 +16,9 @@ class Body extends Component {
       active: null,
       menu: [],
       // Order
-      order: false,
-      itemOrder: [],
+      openOrder: false,
       listOrder: [],
+      itemOrder: {},
       size: null,
       topping: [],
       desc: null,
@@ -36,6 +36,7 @@ class Body extends Component {
       indexItem: -1,
     });
   };
+
   getAmount = (data) => {
     let totalAmount = 0,
       totalPrice = 0;
@@ -47,6 +48,34 @@ class Body extends Component {
     this.setState({
       totalAmount: totalAmount,
       totalPrice: totalPrice,
+    });
+  };
+
+  toogleOrder = (data) => {
+    this.setState({
+      openOrder: !this.state.openOrder,
+      itemOrder: data,
+      size: null,
+      topping: [],
+      desc: null,
+      amount: 1,
+      priceTopping: 0,
+      price: data.price,
+    });
+    this.resetIndexItem();
+  };
+  editItemOrder = (data, index) => {
+    let itemEdit = this.state.menu.filter((item) => item._id === data._id);
+    this.setState({
+      openOrder: !this.state.openOrder,
+      itemOrder: itemEdit[0],
+      size: data.size,
+      topping: data.topping,
+      desc: data.description,
+      amount: data.amount,
+      price: data.price,
+      priceTopping: data.priceTopping,
+      indexItem: index,
     });
   };
   addToCart = (
@@ -108,33 +137,6 @@ class Body extends Component {
     }
     this.resetIndexItem();
   };
-  toogleOrder = (data) => {
-    this.setState({
-      order: !this.state.order,
-      itemOrder: data,
-      size: null,
-      topping: [],
-      desc: null,
-      amount: 1,
-      priceTopping: 0,
-      price: data.price,
-    });
-    this.resetIndexItem();
-  };
-  editItemOrder = (data, index) => {
-    let itemEdit = this.state.menu.filter((item) => item._id === data._id);
-    this.setState({
-      order: !this.state.order,
-      itemOrder: itemEdit[0],
-      size: data.size,
-      topping: data.topping,
-      desc: data.description,
-      amount: data.amount,
-      price: data.price,
-      priceTopping: data.priceTopping,
-      indexItem: index,
-    });
-  };
 
   mergeData = (category, product) => {
     category.map((itemcat) => {
@@ -150,7 +152,6 @@ class Body extends Component {
     });
     return category;
   };
-
   componentDidMount() {
     fetch("https://api.thecoffeehouse.com/api/v2/category/web")
       .then((res) => res.json())
@@ -175,8 +176,11 @@ class Body extends Component {
       this.getAmount(JSON.parse(cartOrder));
     }
   }
+
   render() {
     const { isLoaded, allData } = this.state;
+    console.log("list order", this.state.listOrder);
+
     if (!isLoaded) {
       return (
         <div className="main">
@@ -192,27 +196,25 @@ class Body extends Component {
         <div className="main">
           <ListCategory
             classList="categories"
-            ConcatList={allData}
+            data={allData}
             active={this.state.active}
           />
           <MenuContainer
             classMenu="products"
-            ConcatList={allData}
-            changeActive={this.changeActive}
+            data={allData}
             active={this.state.active}
             toogleOrder={this.toogleOrder}
           />
-          {this.state.order ? (
+          {this.state.openOrder ? (
             <OrderContainer
               toogleOrder={this.toogleOrder}
-              itemOrder={this.state.itemOrder}
               addToCart={this.addToCart}
+              itemOrder={this.state.itemOrder}
               size={this.state.size}
               topping={this.state.topping}
               desc={this.state.desc}
               amount={this.state.amount}
               price={this.state.price}
-              editItem={this.state.editItem}
               priceTopping={this.state.priceTopping}
             />
           ) : null}

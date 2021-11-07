@@ -30,7 +30,7 @@ class OrderContainer extends Component {
       this.state.priceTopping,
       this.state.price
     );
-    this.setItemOrder(0);
+    this.setItemOrder({});
   };
   calAmount = (data) => {
     let tmpamount = this.state.amount + data;
@@ -82,12 +82,12 @@ class OrderContainer extends Component {
       <div className="order_container">
         <div
           className="order_overlay"
-          onClick={() => this.setItemOrder(0)}
+          onClick={() => this.setItemOrder({})}
         ></div>
         <div className="order_form">
           <i
             className="fas fa-times btn_close_order"
-            onClick={() => this.setItemOrder(0)}
+            onClick={() => this.setItemOrder({})}
           ></i>
           <div className="head_order">
             <Image Size="thumbnail" Src={itemOrder.image} Alt="Ảnh sản phẩm" />

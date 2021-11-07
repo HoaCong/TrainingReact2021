@@ -54,7 +54,7 @@ class MenuContainer extends Component {
         />
 
         <ListProduct
-          ProductList={this.props.ConcatList}
+          ProductList={this.props.data}
           KeyWord={this.state.keyword}
           toogleOrder={this.props.toogleOrder}
         />

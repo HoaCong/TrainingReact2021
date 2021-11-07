@@ -3,9 +3,7 @@ import ShowListProduct from "./ShowListProduct";
 import Search from "../../img/search.png";
 import Image from "../common/Image";
 class ListProduct extends Component {
-  render() {
-    const product = this.props.ProductList;
-    const keyword = this.props.KeyWord;
+  checkData = (product, keyword) => {
     const list = product.map((e) =>
       e.ListProduct.length > 0
         ? e.ListProduct.filter((i) =>
@@ -15,10 +13,16 @@ class ListProduct extends Component {
     );
     let arr = [];
     list.map((item) => (item !== null ? arr.push(item) : null));
-    let result = arr.some((item) => {
+    arr.some((item) => {
       return item.length > 0;
     });
-    if (!result) {
+  };
+  render() {
+    const product = this.props.ProductList;
+    const keyword = this.props.KeyWord;
+    const hasData = this.checkData(product, keyword);
+
+    if (hasData) {
       return (
         <div className="none_data">
           <Image Src={Search} Alt="Logo Cửa Hàng" Size="logo" />
