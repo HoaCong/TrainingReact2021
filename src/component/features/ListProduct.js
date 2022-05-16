@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 import ShowListProduct from "./ShowListProduct";
 import Search from "../../img/search.png";
 import Image from "../common/Image";
@@ -47,4 +47,4 @@ class ListProduct extends Component {
     }
   }
 }
-export default ListProduct;
+export default memo(ListProduct);

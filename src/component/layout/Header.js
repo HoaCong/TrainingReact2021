@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import logo from "../../img/logo.png";
 import Button from "../common/Button";
+import IconCart from "../common/IconCart";
 import Image from "../common/Image";
 import SearchForm from "../common/SearchForm";
 import OrderTimer from "../features/OrderTimer";
-import { Link } from "react-router-dom";
 class ItemAddress extends Component {
   render() {
     return (
@@ -23,23 +24,23 @@ class ListAddress extends Component {
     this.props.callback(e);
   }
   render() {
-    const Address = this.props.Data;
-    if (this.props.address.length < 6 || Address === null) return <div></div>;
-    if (Address.length === 0)
+    const { Data, className, address } = this.props;
+    if (address.length < 6 || Data === null) return <div></div>;
+    if (Data.length === 0)
       return (
         <div className="result_order_input result_error">
           <div>Chuỗi không hợp lệ</div>
         </div>
       );
     return (
-      <ul className={"result_order_input " + this.props.className}>
-        {Address.map((item) => (
+      <ul className={"result_order_input " + className}>
+        {Data.map((location) => (
           <ItemAddress
-            onClick={() => this.getValue(item.full_address)}
-            key={item.full_address}
+            onClick={() => this.getValue(location.full_address)}
+            key={location.full_address}
             Icon="fas fa-map-marker-alt"
-            p_Address={item.title_address}
-            p_Region={item.full_address}
+            p_Address={location.title_address}
+            p_Region={location.full_address}
           />
         ))}
       </ul>
@@ -172,7 +173,15 @@ class Header extends Component {
     document.removeEventListener("mousedown", this.checkInside);
   }
   render() {
-    const { getAddress } = this.state;
+    const {
+      getAddress,
+      textTimer,
+      toogleTimer,
+      listDate,
+      today,
+      address,
+      toogleAddress,
+    } = this.state;
     return (
       <header>
         <Link to="/">
@@ -180,11 +189,11 @@ class Header extends Component {
         </Link>
         <div className="nav_header">
           <div className="toogle_timer" ref={this.insideTimer}>
-            <Button Text={this.state.textTimer} onClick={this.toogleTimer} />
-            {this.state.toogleTimer ? (
+            <Button Text={textTimer} onClick={this.toogleTimer} />
+            {toogleTimer ? (
               <OrderTimer
-                listDate={this.state.listDate}
-                today={this.state.today}
+                listDate={listDate}
+                today={today}
                 changeTextTimer={this.changeTextTimer}
               />
             ) : null}
@@ -198,15 +207,15 @@ class Header extends Component {
               type="text"
               placeholder="Nhập địa chỉ giao hàng"
               name="address"
-              value={this.state.address || ""}
+              value={address || ""}
               onChange={(e) => this.changeInput(e)}
             />
-            {this.state.toogleAddress ? (
+            {toogleAddress ? (
               <ListAddress
                 callback={this.callback}
                 Data={getAddress}
                 className=""
-                address={this.state.address}
+                address={address}
               />
             ) : null}
           </div>
@@ -218,20 +227,7 @@ class Header extends Component {
           {this.props.amount > 0 ? (
             <div className="flex_timer">
               <div className="total_amount"> {this.props.amount}</div>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="7.3" cy="17.3" r="1.4"></circle>
-                <circle cx="13.3" cy="17.3" r="1.4"></circle>
-                <polyline
-                  fill="none"
-                  stroke="#000"
-                  points="0 2 3.2 4 5.3 12.5 16 12.5 18 6.5 8 6.5"
-                ></polyline>
-              </svg>
+              <IconCart />
             </div>
           ) : null}
         </div>

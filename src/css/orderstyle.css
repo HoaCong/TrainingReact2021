@@ -42,11 +42,13 @@
 .radio_order {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
 }
 .radio_order .ele_radio {
-  margin-right: 24px;
   display: flex;
   align-content: center;
+  width: 33%;
+  margin: 8px 0;
 }
 .order_desc {
   width: 100%;

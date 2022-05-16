@@ -1,8 +1,12 @@
-import React,{Component} from 'react'
+import React, { Component } from "react";
 class Price extends Component {
-render(){
-    return(
-    <p className={this.props.className}>{this.props.price} <u>{this.props.unit}</u></p>
-)}
+  render() {
+    const { className, price, unit } = this.props;
+    return (
+      <span className={className}>
+        {price} <u>{unit}</u>
+      </span>
+    );
+  }
 }
-export default Price
+export default Price;

@@ -7,13 +7,14 @@ import SearchForm from "../common/SearchForm";
 class OrderContainer extends Component {
   constructor(props) {
     super(props);
+    const { size, topping, desc, amount, price, priceTopping } = this.props;
     this.state = {
-      size: this.props.size,
-      topping: this.props.topping,
-      desc: this.props.desc,
-      amount: this.props.amount,
-      price: this.props.price,
-      priceTopping: this.props.priceTopping,
+      size: size,
+      topping: topping,
+      desc: desc,
+      amount: amount,
+      price: price,
+      priceTopping: priceTopping,
     };
   }
   setItemOrder = (data) => {

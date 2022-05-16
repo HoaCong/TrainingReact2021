@@ -2,22 +2,23 @@ import React, { Component } from "react";
 import Price from "../common/Price";
 class InputCheckbox extends Component {
   render() {
+    const { checked, type, id, name, value, onClick, nameOption, price } =
+      this.props;
     return (
-      <div className="ele_radio" style={this.props.style}>
+      <div className="ele_radio">
         <input
-          defaultChecked={this.props.checked}
-          type={this.props.type}
-          id={this.props.id}
-          name={this.props.name}
-          value={this.props.value}
-          onClick={this.props.onClick}
+          defaultChecked={checked}
+          type={type}
+          id={id}
+          name={name}
+          value={value}
+          onClick={onClick}
         />
-        <label htmlFor={this.props.id} className="ele_radio">
-          <span>{this.props.nameOption}</span>&nbsp;
-          {this.props.price > 0 ? (
-            <span className="order_amount">
-              (+
-              <Price className="no-margin" price={this.props.price} unit="đ" />)
+        <label htmlFor={id}>
+          <span>{nameOption}</span>&nbsp;
+          {price > 0 ? (
+            <span>
+              (+ <Price className="no-margin" price={price} unit="đ" />)
             </span>
           ) : null}
         </label>

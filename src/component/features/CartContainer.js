@@ -1,27 +1,29 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 import Button from "../common/Button";
 import InputSearch from "../common/Input";
 import Price from "../common/Price";
 class CartContainer extends Component {
   render() {
     let feeShip = 0;
+    const { classCart, totalAmount, listOrder, editItemOrder, totalPrice } =
+      this.props;
     return (
-      <section className={this.props.classCart}>
+      <section className={classCart}>
         <div className="main_cart">
           <div className="box_order">
             <Button
               className="seecart"
               Text="Xem giỏ hàng"
-              disabled={this.props.totalAmount > 0 ? false : true}
+              disabled={totalAmount > 0 ? false : true}
             />
           </div>
           <div className="box_order list_order">
-            {this.props.listOrder != null
-              ? this.props.listOrder.map((item, index) => (
+            {listOrder != null
+              ? listOrder.map((item, index) => (
                   <div
                     className="ele_order item_order"
                     key={index}
-                    onClick={() => this.props.editItemOrder(item, index)}
+                    onClick={() => editItemOrder(item, index)}
                   >
                     <div className="ele_order box_item_order">
                       <div className="item_amount">{item.amount}</div>
@@ -49,13 +51,9 @@ class CartContainer extends Component {
                 ))
               : null}
             <div className="ele_order">
-              <div>Cộng ({this.props.totalAmount} món)</div>
+              <div>Cộng ({totalAmount} món)</div>
               <div>
-                <Price
-                  className="no-margin"
-                  price={this.props.totalPrice}
-                  unit="đ"
-                />
+                <Price className="no-margin" price={totalPrice} unit="đ" />
               </div>
             </div>
             <div className="ele_order">
@@ -64,9 +62,7 @@ class CartContainer extends Component {
                 <Price
                   className="no-margin"
                   price={
-                    this.props.totalPrice >= 50000
-                      ? (feeShip = 0)
-                      : (feeShip = 10000)
+                    totalPrice >= 50000 ? (feeShip = 0) : (feeShip = 10000)
                   }
                   unit="đ"
                 />
@@ -88,7 +84,7 @@ class CartContainer extends Component {
             <div>
               <Price
                 className="no-margin strong"
-                price={this.props.totalPrice + feeShip}
+                price={totalPrice + feeShip}
                 unit="đ"
               />
             </div>
@@ -98,4 +94,4 @@ class CartContainer extends Component {
     );
   }
 }
-export default CartContainer;
+export default memo(CartContainer);

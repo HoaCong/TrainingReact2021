@@ -1,15 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 import ItemCategory from "./ItemCategory";
 class ListCategory extends Component {
   render() {
+    const { classList, data, active } = this.props;
     return (
-      <section className={this.props.classList}>
+      <section className={classList}>
         <ul>
-          <ItemCategory CatList={this.props.data} active={this.props.active} />
+          <ItemCategory CatList={data} active={active} />
         </ul>
       </section>
     );
   }
 }
 
-export default ListCategory;
+export default memo(ListCategory);

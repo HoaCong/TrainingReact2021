@@ -8,13 +8,11 @@ class MenuContainer extends Component {
       keyword: "",
     };
   }
-  getKeyWord = (data) => {
-    this.setState({
-      keyword: data,
-    });
-  };
+
   handleValue(e) {
-    this.getKeyWord(e.target.value);
+    this.setState({
+      keyword: e.target.value,
+    });
   }
 
   activeElement = (data) => {
@@ -26,13 +24,13 @@ class MenuContainer extends Component {
   windowScroll = () => {
     let NodeList = document.querySelectorAll(".box_cat_product");
     let yWindow = window.scrollY + 76; // "+76" vì set height khi chia layout
-    NodeList.forEach((e) =>
-      document.getElementById(e.id).offsetTop <= yWindow &&
-      yWindow <=
-        document.getElementById(e.id).offsetTop +
-          document.getElementById(e.id).offsetHeight
-        ? this.activeElement(e.id)
-        : null
+    NodeList.forEach(
+      (e) =>
+        document.getElementById(e.id).offsetTop <= yWindow &&
+        yWindow <=
+          document.getElementById(e.id).offsetTop +
+            document.getElementById(e.id).offsetHeight &&
+        this.activeElement(e.id)
     );
   };
   componentDidMount() {

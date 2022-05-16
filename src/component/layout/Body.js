@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 import MenuContainer from "../features/MenuContainer";
 import CartContainer from "../features/CartContainer";
 import OrderContainer from "../features/OrderContainer";
@@ -178,15 +178,33 @@ class Body extends Component {
   }
 
   render() {
-    const { isLoaded, allData } = this.state;
-    console.log("list order", this.state.listOrder);
+    const {
+      isLoaded,
+      allData,
+      totalPrice,
+      totalAmount,
+      active,
+      openOrder,
+      itemOrder,
+      size,
+      topping,
+      desc,
+      amount,
+      price,
+      priceTopping,
+      listOrder,
+    } = this.state;
 
     if (!isLoaded) {
       return (
         <div className="main">
           <CateLoading classList="categories" />
           <MenuLoading classMenu="products" />
-          <CartContainer classCart="cart" />
+          <CartContainer
+            classCart="cart"
+            totalPrice={totalPrice}
+            totalAmount={totalAmount}
+          />
         </div>
       );
     } else if (allData.length === 0) {
@@ -194,40 +212,36 @@ class Body extends Component {
     } else {
       return (
         <div className="main">
-          <ListCategory
-            classList="categories"
-            data={allData}
-            active={this.state.active}
-          />
+          <ListCategory classList="categories" data={allData} active={active} />
           <MenuContainer
             classMenu="products"
             data={allData}
-            active={this.state.active}
+            active={active}
             toogleOrder={this.toogleOrder}
           />
-          {this.state.openOrder ? (
+          {openOrder ? (
             <OrderContainer
               toogleOrder={this.toogleOrder}
               addToCart={this.addToCart}
-              itemOrder={this.state.itemOrder}
-              size={this.state.size}
-              topping={this.state.topping}
-              desc={this.state.desc}
-              amount={this.state.amount}
-              price={this.state.price}
-              priceTopping={this.state.priceTopping}
+              itemOrder={itemOrder}
+              size={size}
+              topping={topping}
+              desc={desc}
+              amount={amount}
+              price={price}
+              priceTopping={priceTopping}
             />
           ) : null}
           <CartContainer
             classCart="cart"
-            listOrder={this.state.listOrder}
+            listOrder={listOrder}
             editItemOrder={this.editItemOrder}
-            totalPrice={this.state.totalPrice}
-            totalAmount={this.state.totalAmount}
+            totalPrice={totalPrice}
+            totalAmount={totalAmount}
           />
         </div>
       );
     }
   }
 }
-export default Body;
+export default memo(Body);
