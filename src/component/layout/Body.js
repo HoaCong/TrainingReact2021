@@ -43,7 +43,8 @@ class Body extends Component {
       totalPrice = 0;
     data.forEach(
       (item) =>
-        (totalAmount += item.amount) && (totalPrice += item.price * item.amount)
+        (totalAmount += item.amount) &&
+        (totalPrice += (item.price + item.priceTopping) * item.amount)
     );
     this.props.getAmount(totalAmount);
     this.setState({
