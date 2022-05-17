@@ -38,9 +38,10 @@ class Body extends Component {
   };
 
   getAmount = (data) => {
+    console.log("Body ~ data", data);
     let totalAmount = 0,
       totalPrice = 0;
-    data.map(
+    data.forEach(
       (item) =>
         (totalAmount += item.amount) && (totalPrice += item.price * item.amount)
     );
