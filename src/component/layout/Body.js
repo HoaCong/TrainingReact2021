@@ -19,13 +19,8 @@ class Body extends Component {
       openOrder: false,
       listOrder: [],
       itemOrder: {},
-      size: null,
-      topping: [],
-      desc: null,
-      amount: 1,
-      price: null,
       indexItem: -1,
-      priceTopping: null,
+      detailOrder: {},
       // totalAmount&Price
       totalAmount: 0,
       totalPrice: 0,
@@ -38,7 +33,6 @@ class Body extends Component {
   };
 
   getAmount = (data) => {
-    console.log("Body ~ data", data);
     let totalAmount = 0,
       totalPrice = 0;
     data.forEach(
@@ -57,89 +51,55 @@ class Body extends Component {
     this.setState({
       openOrder: !this.state.openOrder,
       itemOrder: data,
-      size: null,
-      topping: [],
-      desc: null,
-      amount: 1,
-      priceTopping: 0,
-      price: data.price,
+      detailOrder: {},
     });
     this.resetIndexItem();
   };
-  editItemOrder = (data, index) => {
-    let itemEdit = this.state.menu.filter((item) => item._id === data._id);
+  editItemOrder = (order, index) => {
+    let itemEdit = this.state.menu.find((item) => item._id === order._id);
     this.setState({
       openOrder: !this.state.openOrder,
-      itemOrder: itemEdit[0],
-      size: data.size,
-      topping: data.topping,
-      desc: data.description,
-      amount: data.amount,
-      price: data.price,
-      priceTopping: data.priceTopping,
+      itemOrder: itemEdit,
       indexItem: index,
+      detailOrder: order,
     });
   };
-  addToCart = (
-    _id,
-    product_name,
-    size,
-    topping,
-    description,
-    amount,
-    priceTopping,
-    price
-  ) => {
-    let obj = {
-      _id,
-      product_name: product_name,
-      topping_list: this.state.itemOrder.topping_list,
-      size: size,
-      topping: topping,
-      description: description,
-      amount: amount,
-      priceTopping: priceTopping,
-      price: price,
-    };
 
-    let tmpCart = this.state.listOrder;
-    if (this.state.indexItem !== -1) {
-      tmpCart = tmpCart.filter((item, index) => index !== this.state.indexItem);
-    }
+  compareArr = (arr1, arr2) =>
+    JSON.stringify(arr1.sort((a, b) => a.localeCompare(b))) ===
+    JSON.stringify(arr2.sort((a, b) => a.localeCompare(b)));
+
+  addToCart = (order) => {
+    const tmpOrder = { ...order };
+    let tmpListOrder = [...this.state.listOrder];
     let addOrEdit = 1;
-    tmpCart.map((item) =>
-      item._id === _id &&
-      item.size === size &&
-      item.description === description &&
-      (item.topping.length > 1
-        ? item.topping.length === topping.length
-        : JSON.stringify(item.topping) === JSON.stringify(topping))
-        ? ((item.amount += amount),
-          (item.price = price),
-          (item.priceTopping = priceTopping),
-          (addOrEdit *= -1),
-          (item.description = description))
+    if (this.state.indexItem !== -1) {
+      tmpListOrder = tmpListOrder.filter(
+        (item, index) => index !== this.state.indexItem
+      );
+    }
+    tmpListOrder.map((item) =>
+      item._id === tmpOrder._id &&
+      item.size === tmpOrder.size &&
+      item.description === tmpOrder.description &&
+      this.compareArr(item.topping, tmpOrder.topping)
+        ? ((item.amount += tmpOrder.amount),
+          (item.price = tmpOrder.price),
+          (item.priceTopping = tmpOrder.priceTopping),
+          (item.description = tmpOrder.description),
+          (addOrEdit *= -1))
         : (addOrEdit *= 1)
     );
     if (addOrEdit === 1) {
-      this.setState({
-        listOrder: [...tmpCart, obj].filter((item) => item.amount > 0),
-      });
-      localStorage.setItem(
-        "cartOrder",
-        JSON.stringify([...tmpCart, obj].filter((item) => item.amount > 0))
-      );
-      this.getAmount([...tmpCart, obj].filter((item) => item.amount > 0));
-    } else {
-      this.setState({
-        listOrder: tmpCart,
-      });
-      localStorage.setItem("cartOrder", JSON.stringify(tmpCart));
-      this.getAmount(tmpCart);
+      tmpListOrder = [...tmpListOrder, order].filter((item) => item.amount > 0);
     }
+    this.setState({
+      listOrder: tmpListOrder,
+    });
+    localStorage.setItem("cartOrder", JSON.stringify(tmpListOrder));
+    this.getAmount(tmpListOrder);
     this.resetIndexItem();
   };
-
   mergeData = (category, product) => {
     category.map((itemcat) => {
       let arr = [];
@@ -188,12 +148,7 @@ class Body extends Component {
       active,
       openOrder,
       itemOrder,
-      size,
-      topping,
-      desc,
-      amount,
-      price,
-      priceTopping,
+      detailOrder,
       listOrder,
     } = this.state;
 
@@ -226,12 +181,7 @@ class Body extends Component {
               toogleOrder={this.toogleOrder}
               addToCart={this.addToCart}
               itemOrder={itemOrder}
-              size={size}
-              topping={topping}
-              desc={desc}
-              amount={amount}
-              price={price}
-              priceTopping={priceTopping}
+              {...detailOrder}
             />
           ) : null}
           <CartContainer

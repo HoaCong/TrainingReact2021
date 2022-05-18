@@ -7,43 +7,34 @@ import SearchForm from "../common/SearchForm";
 class OrderContainer extends Component {
   constructor(props) {
     super(props);
-    const { size, topping, desc, amount, price, priceTopping } = this.props;
+    const { size, topping, desc, amount, price, priceTopping, itemOrder } =
+      this.props;
     this.state = {
       size: size,
-      topping: topping,
-      desc: desc,
+      topping: topping || [],
+      desc: desc || "",
       amount: amount,
       price: price,
       priceTopping: priceTopping,
+      _id: itemOrder._id,
+      product_name: itemOrder.product_name,
     };
   }
   setItemOrder = (data) => {
     this.props.toogleOrder(data);
   };
   addOrder = () => {
-    this.props.addToCart(
-      this.props.itemOrder._id,
-      this.props.itemOrder.product_name,
-      this.state.size,
-      this.state.topping,
-      this.state.desc,
-      this.state.amount,
-      this.state.priceTopping,
-      this.state.price
-    );
+    this.props.addToCart(this.state);
     this.setItemOrder({});
   };
-  calAmount = (data) => {
-    let tmpamount = this.state.amount + data;
+  calAmount = (num) => {
+    let tmpamount = this.state.amount + num;
     if (tmpamount < 1) {
-      this.setState({
-        amount: 0,
-      });
-    } else {
-      this.setState({
-        amount: tmpamount,
-      });
+      tmpamount = 0;
     }
+    this.setState({
+      amount: tmpamount,
+    });
   };
   setSize = (size, price) => {
     this.setState({
@@ -51,26 +42,24 @@ class OrderContainer extends Component {
       price: price,
     });
   };
-  setTopping = (data) => {
-    let tmp = [...this.state.topping];
-    this.state.topping.includes(data.code)
-      ? (tmp = this.state.topping.filter((item) => item !== data.code)) &&
-        this.setState({
-          topping: tmp,
-          priceTopping: this.state.priceTopping - data.price,
-        })
-      : tmp.push(data.code) &&
-        this.setState({
-          topping: tmp,
-          priceTopping: this.state.priceTopping + data.price,
-        });
+  setTopping = (name, price) => {
+    const { topping, priceTopping } = this.state;
+    let tmp = [...topping];
+    let tmpPrice = 0;
+    topping.includes(name)
+      ? (tmp = topping.filter((item) => item !== name)) &&
+        (tmpPrice = priceTopping - price)
+      : tmp.push(name) && (tmpPrice = priceTopping + price);
+    this.setState({
+      topping: tmp,
+      priceTopping: tmpPrice,
+    });
   };
   getDesc = (e) => {
     this.setState({
       desc: e.target.value,
     });
   };
-
   componentDidMount() {
     if (this.state.size === null) {
       let b = document.querySelector("input[checked]").getAttribute("value");
@@ -96,11 +85,8 @@ class OrderContainer extends Component {
               <h4 className="name_product">{itemOrder.product_name}</h4>
               <p className="current_option">{this.state.size}</p>
               <p className="current_option">
-                {itemOrder.topping_list.map((item, index) =>
-                  this.state.topping.includes(item.code)
-                    ? item.product_name +
-                      (index < this.state.topping.length - 1 ? " + " : "")
-                    : null
+                {this.state.topping.map(
+                  (item, index) => (index > 0 ? " + " : "") + item
                 )}
               </p>
             </article>
@@ -140,13 +126,17 @@ class OrderContainer extends Component {
                     <InputCheckbox
                       key={index}
                       checked={
-                        this.state.topping.includes(item.code) ? true : false
+                        this.state.topping.includes(item.product_name)
+                          ? true
+                          : false
                       }
                       type="checkbox"
                       id={item.code}
                       name="topping"
                       value={item.code}
-                      onClick={() => this.setTopping(item)}
+                      onClick={() =>
+                        this.setTopping(item.product_name, item.price)
+                      }
                       nameOption={item.product_name}
                       price={item.price}
                     />
