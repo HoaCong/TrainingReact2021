@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Button from "../common/Button";
-import Price from "../common/Price";
 import Image from "../common/Image";
 import InputCheckbox from "../common/InputCheckbox";
+import Price from "../common/Price";
 import SearchForm from "../common/SearchForm";
 class OrderContainer extends Component {
   constructor(props) {
@@ -13,9 +13,9 @@ class OrderContainer extends Component {
       size: size,
       topping: topping || [],
       desc: desc || "",
-      amount: amount,
-      price: price,
-      priceTopping: priceTopping,
+      amount: amount || 1,
+      price: price || itemOrder.price,
+      priceTopping: priceTopping || 0,
       _id: itemOrder._id,
       product_name: itemOrder.product_name,
     };
@@ -61,13 +61,14 @@ class OrderContainer extends Component {
     });
   };
   componentDidMount() {
-    if (this.state.size === null) {
+    if (!this.state.size) {
       let b = document.querySelector("input[checked]").getAttribute("value");
       if (b != null) this.setSize(b, this.state.price);
     }
   }
   render() {
     const itemOrder = this.props.itemOrder;
+
     return (
       <div className="order_container">
         <div

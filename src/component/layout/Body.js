@@ -81,12 +81,12 @@ class Body extends Component {
     tmpListOrder.map((item) =>
       item._id === tmpOrder._id &&
       item.size === tmpOrder.size &&
-      item.description === tmpOrder.description &&
+      item.desc === tmpOrder.desc &&
       this.compareArr(item.topping, tmpOrder.topping)
         ? ((item.amount += tmpOrder.amount),
           (item.price = tmpOrder.price),
           (item.priceTopping = tmpOrder.priceTopping),
-          (item.description = tmpOrder.description),
+          (item.desc = tmpOrder.desc),
           (addOrEdit *= -1))
         : (addOrEdit *= 1)
     );
