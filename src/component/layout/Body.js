@@ -19,8 +19,8 @@ class Body extends Component {
       openOrder: false,
       listOrder: [],
       itemOrder: {},
-      indexItem: -1,
       detailOrder: {},
+      indexItem: -1,
       // totalAmount&Price
       totalAmount: 0,
       totalPrice: 0,
