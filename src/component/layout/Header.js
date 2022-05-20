@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../img/logo.png";
 import Button from "../common/Button";
@@ -21,12 +21,12 @@ class ItemAddress extends Component {
 }
 class ListAddress extends Component {
   getValue(e) {
-    this.props.callback(e);
+    this.props.setKeywordAddress(e);
   }
   render() {
-    const { Data, className, address } = this.props;
-    if (address.length < 6 || Data === null) return <div></div>;
-    if (Data.length === 0)
+    const { address, className, keyword } = this.props;
+    if (keyword.length < 6 || address === null) return <div></div>;
+    if (address.length === 0)
       return (
         <div className="result_order_input result_error">
           <div>Chuỗi không hợp lệ</div>
@@ -34,7 +34,7 @@ class ListAddress extends Component {
       );
     return (
       <ul className={"result_order_input " + className}>
-        {Data.map((location) => (
+        {address.map((location) => (
           <ItemAddress
             onClick={() => this.getValue(location.full_address)}
             key={location.full_address}
@@ -51,16 +51,16 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      getAddress: null,
-      address: "",
+      address: null,
+      keyword: "",
       toogleAddress: false,
       toogleTimer: false,
       listDate: [],
       textTimer: "GIAO NGAY",
       today: null,
     };
-    this.debounceChangeInput = React.createRef(null);
-    this.insideTimer = React.createRef();
+    this.debounceChangeInput = createRef(null);
+    this.insideTimer = createRef();
   }
   changeTextTimer = (data) => {
     this.setState({
@@ -99,9 +99,9 @@ class Header extends Component {
     });
     this.getThreeDate();
   };
-  callback = (data) => {
+  setKeywordAddress = (data) => {
     this.setState({
-      address: data,
+      keyword: data,
     });
   };
   searchApiAddress = (key) => {
@@ -134,12 +134,12 @@ class Header extends Component {
     )
       .then((response) => response.json())
       .then((ListAddress) => {
-        this.setState({ getAddress: ListAddress.addresses });
+        this.setState({ address: ListAddress.addresses });
       });
   };
   changeInput(e) {
     const key = e.target.value;
-    this.setState({ address: key });
+    this.setState({ keyword: key });
     if (key.length > 5) {
       if (this.debounceChangeInput.current) {
         clearTimeout(this.debounceChangeInput.current);
@@ -174,12 +174,12 @@ class Header extends Component {
   }
   render() {
     const {
-      getAddress,
+      address,
       textTimer,
       toogleTimer,
       listDate,
       today,
-      address,
+      keyword,
       toogleAddress,
     } = this.state;
     return (
@@ -207,15 +207,15 @@ class Header extends Component {
               type="text"
               placeholder="Nhập địa chỉ giao hàng"
               name="address"
-              value={address || ""}
+              value={keyword || ""}
               onChange={(e) => this.changeInput(e)}
             />
             {toogleAddress ? (
               <ListAddress
-                callback={this.callback}
-                Data={getAddress}
-                className=""
+                setKeywordAddress={this.setKeywordAddress}
                 address={address}
+                className=""
+                keyword={keyword}
               />
             ) : null}
           </div>
