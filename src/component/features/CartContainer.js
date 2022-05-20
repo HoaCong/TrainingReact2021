@@ -18,7 +18,7 @@ class CartContainer extends Component {
             />
           </div>
           <div className="box_order list_order">
-            {listOrder != null
+            {listOrder.length > 0
               ? listOrder.map((item, index) => (
                   <div
                     className="ele_order item_order"
@@ -27,7 +27,7 @@ class CartContainer extends Component {
                   >
                     <div className="ele_order box_item_order">
                       <div className="item_amount">{item.amount}</div>
-                      <div className="">
+                      <div>
                         <h4 className="item_name">{item.product_name}</h4>
                         <p className="list_option">
                           {item.size}

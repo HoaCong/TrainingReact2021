@@ -5,7 +5,7 @@ import OrderContainer from "../features/OrderContainer";
 import ListCategory from "../features/ListCategory";
 import CateLoading from "../placeholder/CategoriesLoading";
 import MenuLoading from "../placeholder/MenuLoading";
-
+import { mergeData, compareArr } from "../assets/helpers";
 class Body extends Component {
   constructor(props) {
     super(props);
@@ -55,6 +55,7 @@ class Body extends Component {
     });
     this.resetIndexItem();
   };
+
   editItemOrder = (order, index) => {
     let itemEdit = this.state.menu.find((item) => item._id === order._id);
     this.setState({
@@ -64,10 +65,6 @@ class Body extends Component {
       detailOrder: order,
     });
   };
-
-  compareArr = (arr1, arr2) =>
-    JSON.stringify(arr1.sort((a, b) => a.localeCompare(b))) ===
-    JSON.stringify(arr2.sort((a, b) => a.localeCompare(b)));
 
   addToCart = (order) => {
     const tmpOrder = { ...order };
@@ -82,7 +79,7 @@ class Body extends Component {
       item._id === tmpOrder._id &&
       item.size === tmpOrder.size &&
       item.desc === tmpOrder.desc &&
-      this.compareArr(item.topping, tmpOrder.topping)
+      compareArr(item.topping, tmpOrder.topping)
         ? ((item.amount += tmpOrder.amount),
           (item.price = tmpOrder.price),
           (item.priceTopping = tmpOrder.priceTopping),
@@ -100,20 +97,7 @@ class Body extends Component {
     this.getAmount(tmpListOrder);
     this.resetIndexItem();
   };
-  mergeData = (category, product) => {
-    category.map((itemcat) => {
-      let arr = [];
-      product.map((itempro) => {
-        if (itempro.categ_id.includes(itemcat.id)) {
-          arr.push(itempro);
-        }
-        return 0;
-      });
-      itemcat.ListProduct = arr;
-      return 0;
-    });
-    return category;
-  };
+
   componentDidMount() {
     fetch("https://api.thecoffeehouse.com/api/v2/category/web")
       .then((res) => res.json())
@@ -121,7 +105,7 @@ class Body extends Component {
         fetch("https://api.thecoffeehouse.com/api/v2/menu")
           .then((response) => response.json())
           .then((menus) => {
-            const newData = this.mergeData(categories, menus.data);
+            const newData = mergeData(categories, menus.data);
             this.setState({
               allData: newData,
               menu: menus.data,
@@ -159,6 +143,7 @@ class Body extends Component {
           <MenuLoading classMenu="products" />
           <CartContainer
             classCart="cart"
+            listOrder={listOrder}
             totalPrice={totalPrice}
             totalAmount={totalAmount}
           />

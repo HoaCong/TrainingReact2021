@@ -68,7 +68,6 @@ class OrderContainer extends Component {
   }
   render() {
     const itemOrder = this.props.itemOrder;
-
     return (
       <div className="order_container">
         <div
