@@ -36,7 +36,7 @@ class CartContainer extends Component {
                         <p className="list_option">{item.desc}</p>
                       </div>
                     </div>
-                    <div>
+                    <div className="price">
                       <Price
                         className="no-margin"
                         price={(item.price + item.priceTopping) * item.amount}
